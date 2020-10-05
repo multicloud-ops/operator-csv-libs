@@ -1,7 +1,12 @@
 import unittest
+import pytest
 import copy
+import os, yaml
 from ..csv import ClusterServiceVersion
 from ..images import Image
+
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 relatedImageSHA1 = "b955bc2952a78bd884896ea88b3325920891cfbb6a36ec5014d1a621eb68c51a"
 relatedImageSHA2 = "fe8c229a9c23fc204a93a638e8fd1fe440023d41c7e53fa0b2e50eee34c95836"
@@ -441,6 +446,19 @@ class TestCSV(unittest.TestCase):
         # update csv and check to see if those changes are correct
         testcsvWithoutParams._update_operand_images()
         self.assertEqual(testcsvWithoutParams.csv, TEST_DUMMY_CSV)
+
+    def test__get_deployments(self):
+        # Read in a sample CSV
+        with open(THIS_DIR + '/test_files/valid_csv.yaml', 'r') as stream:
+            sample = yaml.safe_load(stream)
+
+        csv = ClusterServiceVersion(sample)
+        deployments = csv.get_operator_deployments()
+        ## Assert that dpeloyment is as expected
+
+        ## Assert that original CSV did not get changed at all
+        self.assertEqual(csv.csv, csv.original_csv)
+
 
     def test__setup_basic_logger(self):
         # should not be tested because it only sets up logger
