@@ -27,5 +27,5 @@ jobs:
         name: build the image
         run: |
           docker buildx build --push \
-            --tag eveliososa/multi-arch-python-environment:latest \
+            --tag eveliososa/python-environment:latest \
             --platform linux/amd64,linux/ppc64le .
