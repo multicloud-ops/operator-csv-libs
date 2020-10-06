@@ -31,4 +31,4 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64, linux/ppc64le
           push: true
-          tags: quay.io/multicloudops/operator-csv-libs/:latest
+          tags: quay.io/multicloudops/operator-csv-libs:latest
