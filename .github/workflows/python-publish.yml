@@ -34,4 +34,4 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64, linux/ppc64le
           push: true
-          tags: hyc-cp4mcm-team-docker-local.artifactory.swg-devops.com/cicd/python-environment:latest
+          tags: eveliososa/python-environment:latest
