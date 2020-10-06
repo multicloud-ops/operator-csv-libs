@@ -22,10 +22,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - 
         name: login to artifactory
-        run: echo "${{ secrets.ARTIFACTORY_TOKEN }}" | docker login hyc-cp4mcm-team-docker-local.artifactory.swg-devops.com -u "${{ secrets.ARTIFACTORY_USER }}" --password-stdin
-      - 
-        name: login to docker
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        run: echo "${{ secrets.QUAY_TOKEN }}" | docker login quay.io/multicloudops/operator-csv-libs -u "${{ secrets.QUAY_USER }}" --password-stdin
       - 
         name: Build and push
         uses: docker/build-push-action@v2
@@ -34,4 +31,4 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64, linux/ppc64le
           push: true
-          tags: eveliososa/python-environment:latest
+          tags: quay.io/multicloudops/operator-csv-libs/python-environment:latest
