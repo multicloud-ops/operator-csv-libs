@@ -21,11 +21,11 @@ jobs:
         with:
           version: latest
       - 
-        name: login to docker hub
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        name: login to artifactory
+        run: echo "${{ secrets.ARTIFACTORY_TOKEN }}" | docker login hyc-cp4mcm-team-docker-local.artifactory.swg-devops.com -u "${{ secrets.ARTIFACTORY_USER }}" --password-stdin
       - 
         name: build the image
         run: |
           docker buildx build --push \
-            --tag eveliososa/python-environment:latest \
+            --tag hyc-cp4mcm-team-docker-local.artifactory.swg-devops.com/cicd/python-environment:latest \
             --platform linux/amd64,linux/ppc64le .
