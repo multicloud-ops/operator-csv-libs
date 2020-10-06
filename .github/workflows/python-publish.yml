@@ -15,17 +15,20 @@ jobs:
         name: Checkout
         uses: actions/checkout@v2
       -
-        name: install buildx
-        id: buildx
-        uses: crazy-max/ghaction-docker-buildx@v1
-        with:
-          version: latest
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
       - 
         name: login to artifactory
         run: echo "${{ secrets.ARTIFACTORY_TOKEN }}" | docker login hyc-cp4mcm-team-docker-local.artifactory.swg-devops.com -u "${{ secrets.ARTIFACTORY_USER }}" --password-stdin
       - 
-        name: build the image
-        run: |
-          docker buildx build --push \
-            --tag hyc-cp4mcm-team-docker-local.artifactory.swg-devops.com/cicd/python-environment:latest \
-            --platform linux/amd64,linux/ppc64le .
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64, linux/ppc64le
+          push: true
+          tags: hyc-cp4mcm-team-docker-local.artifactory.swg-devops.com/cicd/python-environment:latest
