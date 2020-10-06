@@ -8,7 +8,7 @@ on:
     branches: master
 
 jobs:
-  build:
+  multi:
     runs-on: ubuntu-latest
     steps:
       -
@@ -23,6 +23,9 @@ jobs:
       - 
         name: login to artifactory
         run: echo "${{ secrets.ARTIFACTORY_TOKEN }}" | docker login hyc-cp4mcm-team-docker-local.artifactory.swg-devops.com -u "${{ secrets.ARTIFACTORY_USER }}" --password-stdin
+      - 
+        name: login to docker
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - 
         name: Build and push
         uses: docker/build-push-action@v2
