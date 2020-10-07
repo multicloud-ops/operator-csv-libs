@@ -6,7 +6,7 @@ RUN apk add git
 RUN mkdir /install
 WORKDIR /install
 COPY /docker/requirements.txt /requirements.txt
-RUN cat requirements.txt
+RUN cat /requirements.txt
 RUN /usr/local/bin/python -m pip install --upgrade pip && pip install --no-warn-script-location --prefix=/install -r /requirements.txt
 
 FROM base
