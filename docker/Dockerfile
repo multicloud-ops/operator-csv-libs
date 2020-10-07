@@ -5,7 +5,8 @@ FROM base as builder
 RUN apk add git
 RUN mkdir /install
 WORKDIR /install
-COPY requirements.txt /requirements.txt
+COPY requirements.txt requirements.txt
+RUN cat requirements.txt
 RUN /usr/local/bin/python -m pip install --upgrade pip && pip install --no-warn-script-location --prefix=/install -r /requirements.txt
 
 FROM base
