@@ -6,7 +6,6 @@ name: Upload Python Environment Container to Quay
 on:
   push:
     branches: master
-  pull_request:
 
 jobs:
   multi:
@@ -35,11 +34,11 @@ jobs:
       - 
         name: login to quay
         run: |
-          if [ ${{ github.event_name != 'pull_request' }} ]
+          if [ ${{ github.event_name != 'push' }} ]
           then
             echo "${{ secrets.QUAY_TOKEN }}" | docker login quay.io -u "${{ secrets.QUAY_USER }}" --password-stdin
           else
-            echo "login skipped."
+            echo "login skipped"
           fi
       - 
         name: Build and push
