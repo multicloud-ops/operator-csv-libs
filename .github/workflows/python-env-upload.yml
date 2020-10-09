@@ -6,11 +6,18 @@ name: Upload Python Environment Container to Quay
 on:
   push:
     branches: master
+  pull_request:
 
 jobs:
   multi:
     runs-on: ubuntu-latest
     steps:
+      - 
+        name: Get smart tag
+        id: prepare
+        uses: Surgo/docker-smart-tag-action@v1
+        with:
+          docker_image: quay.io/multicloudops/operator-csv-libs
       -
         name: Checkout
         uses: actions/checkout@v2
@@ -30,8 +37,8 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           platforms: linux/amd64, linux/ppc64le
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: |
             quay.io/multicloudops/operator-csv-libs:latest
-            quay.io/multicloudops/operator-csv-libs:1.0.0
+            ${{ steps.prepare.outputs.tag }}
 
