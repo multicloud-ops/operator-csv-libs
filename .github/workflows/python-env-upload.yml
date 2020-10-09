@@ -13,12 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - 
-        name: Get smart tag
+        name: Prepare tag
         id: prepare
         run: |
           DOCKER_IMAGE=quay.io/multicloudops/operator-csv-libs
           TAGS=${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}
           echo ::set-output name=tags::${TAGS}
+      -
+        name: output tag
+        run: |
+          echo ${{ steps.prepare.outputs.tags }}
       -
         name: Checkout
         uses: actions/checkout@v2
