@@ -7,13 +7,14 @@ on:
   push:
     tags:
       - 'v*.*.*'
+  pull_request:
 
 jobs:
   multi:
     runs-on: ubuntu-latest
     steps:
       - 
-        name: Prepare tag
+        name: Prepare tags
         id: prepare
         run: |
           DOCKER_IMAGE=quay.io/multicloudops/operator-csv-libs
@@ -26,7 +27,7 @@ jobs:
           fi
           echo ::set-output name=tags::${TAGS}
       -
-        name: output tag
+        name: Output tags
         run: |
           echo ${{ steps.prepare.outputs.tags }}
       -
@@ -41,7 +42,7 @@ jobs:
       -
         name: login to quay
         run: |
-          if [ "${{ github.event_name }}" != "push" ]; then
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
             echo "${{ secrets.QUAY_TOKEN }}" | docker login quay.io -u "${{ secrets.QUAY_USER }}" --password-stdin
           else
             echo "login skipped"
