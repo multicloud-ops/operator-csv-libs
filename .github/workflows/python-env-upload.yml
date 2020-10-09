@@ -15,10 +15,10 @@ jobs:
       - 
         name: Prepare tag
         id: prepare
-        uses: Surgo/docker-smart-tag-action@v1
-        with:
-          docker_image: quay.io/multicloudops/operator-csv-libs
-          tag_with_sha: ${GITHUB_SHA::8}
+        run: |
+          DOCKER_IMAGE=quay.io/multicloudops/operator-csv-libs
+          TAG=${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}
+          echo ::set-output name=tag::${TAG}
       -
         name: output tag
         run: |
