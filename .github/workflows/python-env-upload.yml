@@ -40,5 +40,5 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             quay.io/multicloudops/operator-csv-libs:latest
-            ${{ steps.prepare.outputs.tag }}
+            ${{ steps.prepare.outputs.tag_with_sha }}
 
