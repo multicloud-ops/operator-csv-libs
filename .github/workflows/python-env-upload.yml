@@ -15,9 +15,10 @@ jobs:
       - 
         name: Get smart tag
         id: prepare
-        uses: Surgo/docker-smart-tag-action@v1
-        with:
-          docker_image: quay.io/multicloudops/operator-csv-libs
+        run: |
+          DOCKER_IMAGE=quay.io/multicloudops/operator-csv-libs
+          TAGS=${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}
+          echo ::set-output name=tags::${TAGS}
       -
         name: Checkout
         uses: actions/checkout@v2
@@ -37,8 +38,8 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           platforms: linux/amd64, linux/ppc64le
-          push: ${{ github.event_name != 'pull_request' }}
+          push: false
           tags: |
             quay.io/multicloudops/operator-csv-libs:latest
-            ${{ steps.prepare.outputs.tag_with_sha }}
+            ${{ steps.prepare.outputs.tags }}
 
