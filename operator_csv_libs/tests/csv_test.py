@@ -453,8 +453,19 @@ class TestCSV(unittest.TestCase):
             sample = yaml.safe_load(stream)
 
         csv = ClusterServiceVersion(sample)
-        deployments = csv.get_operator_deployments()
+        orig_depl = csv.original_csv['spec']['install']['spec']['deployments']
+
+        operator_deployment_variations = [
+            {'apiversion': 'apps/v1', 'kind': 'Deployment'},
+            {} # default values
+        ]
+
+        for variation in operator_deployment_variations:
+            with self.subTest(variation=variation):
+                deployments = csv.get_operator_deployments(variation)
+                self.assertEqual(deployments[0], {**orig_depl[0], **operator_deployment_variations[0]})
         ## Assert that dpeloyment is as expected
+
 
         ## Assert that original CSV did not get changed at all
         self.assertEqual(csv.csv, csv.original_csv)
