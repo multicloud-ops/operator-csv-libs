@@ -19,16 +19,14 @@ jobs:
         python-version: '3.x'
     - name: Prepare version
       run: |
-        VERSION=${GITHUB_REF#refs/tags/}
-        VERSION="${VERSION}:1"
-
+        VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
         echo ${VERSION}
 
         PLACEHOLDER="version='default'"
         SETUP_FILE="setup.py"
 
         grep "${PLACEHOLDER}" "${SETUP_FILE}"
-        sed -i "s/$PLACEHOLDER/version='1.5.0'/g" setup.py
+        sed -i "s/$PLACEHOLDER/version='${VERSION}'/g" setup.py
 
         cat ${SETUP_FILE}
     - name: Install dependencies
