@@ -23,12 +23,12 @@ jobs:
         VERSION="${VERSION}:1"
 
         echo ${VERSION}
-        
+
         PLACEHOLDER="version='default'"
         SETUP_FILE="setup.py"
 
         grep "${PLACEHOLDER}" "${SETUP_FILE}"
-        sed -i "s/$PLACEHOLDER/version='${VERSION}'/g" setup.py
+        sed -i "s/$PLACEHOLDER/version='$VERSION'/g" setup.py
 
         cat ${SETUP_FILE}
     - name: Install dependencies
