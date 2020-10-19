@@ -9,6 +9,7 @@ on:
 
 jobs:
   deploy:
+    
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +22,7 @@ jobs:
       run: |
         # get release version
         VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
-        
+
         # file and content that will be replaced
         PLACEHOLDER="version='default'"
         SETUP_FILE="setup.py"
