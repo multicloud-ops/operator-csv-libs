@@ -26,7 +26,7 @@ jobs:
         SETUP_FILE="setup.py"
 
         grep "${PLACEHOLDER}" "${SETUP_FILE}"
-        sed -i "s/$PLACEHOLDER/version='${VERSION}'/g" "${SETUP_FILE}"
+        sed -i "s/${PLACEHOLDER}/version='${VERSION}'/g" ${SETUP_FILE}
 
         cat ${SETUP_FILE}
     - name: Install dependencies
