@@ -22,11 +22,11 @@ jobs:
         VERSION=${GITHUB_REF#refs/tags/}
         VERSION="${VERSION}:1"
 
-        PLACEHOLDER='version="default"'
+        PLACEHOLDER="version='default'"
         SETUP_FILE="setup.py"
 
         grep "${PLACEHOLDER}" "${SETUP_FILE}"
-        sed -i "s/version=\"default\"/version=\"1.5.0\"/g" setup.py
+        sed -i "s/version='default'/version=\"1.5.0\"/g" setup.py
 
         cat ${SETUP_FILE}
     - name: Install dependencies
