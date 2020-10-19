@@ -22,7 +22,7 @@ jobs:
         VERSION=${GITHUB_REF#refs/tags/}
         VERSION="${VERSION}:1"
 
-        PLACEHOLDER="__version__='default'"
+        PLACEHOLDER='version="default"'
         SETUP_FILE="setup.py"
 
         grep "${PLACEHOLDER}" "${SETUP_FILE}"
