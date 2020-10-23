@@ -448,27 +448,38 @@ class TestCSV(unittest.TestCase):
         self.assertEqual(testcsvWithoutParams.csv, TEST_DUMMY_CSV)
 
     def test__get_deployments(self):
-        # Read in a sample CSV
+        # Read in sample files
+        with open(THIS_DIR + '/test_files/valid_operator_deployment.yaml', 'r') as stream:
+            deployment_sample = yaml.safe_load(stream)
         with open(THIS_DIR + '/test_files/valid_csv.yaml', 'r') as stream:
-            sample = yaml.safe_load(stream)
+            csv_sample = yaml.safe_load(stream)
 
-        csv = ClusterServiceVersion(sample)
-        orig_depl = csv.original_csv['spec']['install']['spec']['deployments']
+        c = ClusterServiceVersion(csv_sample)
 
+        # Increasing the maxdiff lets us see all the context on how the yaml failed
+        self.maxDiff = None
+
+         ## Assert that dpeloyment is as expected
         operator_deployment_variations = [
-            {'apiversion': 'apps/v1', 'kind': 'Deployment'},
-            {} # default values
+            {}, # default values
+            {'api_version': 'apps/v1', 'kind': 'Deployment'},
         ]
 
         for variation in operator_deployment_variations:
             with self.subTest(variation=variation):
-                deployments = csv.get_operator_deployments(variation)
-                self.assertEqual(deployments[0], {**orig_depl[0], **operator_deployment_variations[0]})
-        ## Assert that dpeloyment is as expected
+                deployments = c.get_operator_deployments(**variation)
 
+                # We expect a dict back
+                self.assertIsInstance(deployments, list)
+
+                # Ensure we only got a single deployment
+                self.assertEqual(len(deployments), 1)
+                
+                # Ensure deployment is valid
+                self.assertDictEqual(deployments[0], deployment_sample)
 
         ## Assert that original CSV did not get changed at all
-        self.assertEqual(csv.csv, csv.original_csv)
+        self.assertEqual(c.csv, c.original_csv)
 
 
     def test__setup_basic_logger(self):
