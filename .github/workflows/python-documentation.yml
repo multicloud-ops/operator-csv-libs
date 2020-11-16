@@ -1,22 +1,29 @@
 name: Update Python Documentation
 
 on:
-  release:
-    types: [created]
+  push
 
 jobs:
   docs:
+
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v1
-    - uses: ammaraskar/sphinx-action@master
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        docs-folder: "docs/"
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r docs/requirements.txt
     -
       name: Update Documentation
       run: |
         make --directory docs/ html
         git config user.email "evelio.sosa@ibm.com"
         git config user.name "Evelio Sosa"
-        git add .
-        git commit -m "update operator csv libs documentation" || true
+        git add docs/_build/html
+        git commit -m "update operator csv libs documentation"
+        git subtree push --prefix docs/_build/html  origin gh-pages
