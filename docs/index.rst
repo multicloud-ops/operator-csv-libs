@@ -7,56 +7,56 @@ Welcome to Operator CSV Libs's documentation!
 =============================================
 
 The ``ClusterServiceVersion`` class
-***********************************
+-----------------------------------
 .. autoclass:: operator_csv_libs.csv.ClusterServiceVersion
    :members:
    :undoc-members:
    :inherited-members:
 
 The ``ImageRepo`` class
-***********************
+-----------------------
 .. autoclass:: operator_csv_libs.imagerepo.ImageRepo
    :members:
    :undoc-members:
    :inherited-members:
 
 The ``ArtifactoryRepo`` class
-*****************************
+-----------------------------
 .. autoclass:: operator_csv_libs.imagerepo.ArtifactoryRepo
    :members:
    :undoc-members:
    :inherited-members:
 
 The ``QuayRepo`` class
-**********************
+----------------------
 .. autoclass:: operator_csv_libs.imagerepo.QuayRepo
    :members:
    :undoc-members:
    :inherited-members:
 
 The ``Image`` class
-*******************
+-------------------
 .. autoclass:: operator_csv_libs.images.Image
    :members:
    :undoc-members:
    :inherited-members:
 
 The ``Operatorimage`` class
-***************************
+---------------------------
 .. autoclass:: operator_csv_libs.operatorimage.Operatorimage
    :members:
    :undoc-members:
    :inherited-members:
 
 The ``Package`` class
-*********************
+---------------------
 .. autoclass:: operator_csv_libs.package.Package
    :members:
    :undoc-members:
    :inherited-members:
 
 The ``Channel`` class
-*********************
+---------------------
 .. autoclass:: operator_csv_libs.package.Channel
    :members:
    :undoc-members:

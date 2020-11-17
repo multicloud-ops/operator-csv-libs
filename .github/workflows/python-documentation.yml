@@ -1,7 +1,8 @@
 name: Update Python Documentation
 
 on:
-  push
+  release:
+    types: [created]
 
 jobs:
   docs:
@@ -21,7 +22,7 @@ jobs:
     - name: Prepare version
       run: |
         # get release version
-        VERSION="v1.6.6"
+        VERSION=$(echo $GITHUB_REF | sed 's#.*/v##')
 
         # file and content that will be replaced
         PLACEHOLDER="release='default'"
