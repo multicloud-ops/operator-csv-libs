@@ -5,7 +5,7 @@ setup(
     version='default',
     description='Code to manage OLM related CSVs and channels',
     author='bennett-white',
-    url='https://github.com/eveliososa/operator-csv-libs',
+    url='https://github.com/multicloud-ops/operator-csv-libs',
     packages=['operator_csv_libs'],
     install_requires=[
         'pyyaml',
