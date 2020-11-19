@@ -65,6 +65,7 @@ class ClusterServiceVersion:
 
     def set_container_image(self, image):
         """ Set metadata.annotations.containerImage with Image.image passed in
+        
         :param image: Image that will be assigned to metadata.annotations.containerImage
         :type image: Image
         """
@@ -72,8 +73,7 @@ class ClusterServiceVersion:
 
     def set_version(self, version):
         """Set the target version for the CSV
-        Arguments:
-            version {string} -- Target version in semver format X.Y.Z with optional -nnnn for pre-release
+
         :param version: Target version in semver format X.Y.Z with optional -nnnn for pre-release
         :type version: string
         """
