@@ -63,9 +63,9 @@ class ClusterServiceVersion:
                 continue
             d['spec']['template']['metadata']['annotations'][key] = value
 
-    def set_container_image(self, image):
+    def set_container_image_annotation(self, image):
         """ Set metadata.annotations.containerImage with Image.image passed in
-        
+
         :param image: Image that will be assigned to metadata.annotations.containerImage
         :type image: Image
         """
