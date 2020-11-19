@@ -62,12 +62,20 @@ class ClusterServiceVersion:
             if not 'annotations' in d['spec']['template']['metadata']:
                 continue
             d['spec']['template']['metadata']['annotations'][key] = value
+    
+    def set_container_image(self, image):
+        """ Set metadata.annotations.containerImage with Image.image passed in
+
+        :param image: Image that will be assigned to metadata.annotations.containerImage
+        :type image: Image
+        """
+        self.csv['metadata']['annotations']['containerImage'] = image.image
 
     def set_version(self, version):
         """Set the target version for the CSV
 
-        Arguments:
-            version {string} -- Target version in semver format X.Y.Z with optional -nnnn for pre-release
+        :param version: Target version in semver format X.Y.Z with optional -nnnn for pre-release
+        :type version: string
         """
         self.version = version
         self.versioned_name = '{}.v{}'.format(self.name, self.version)
