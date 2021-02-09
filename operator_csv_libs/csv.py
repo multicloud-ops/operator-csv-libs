@@ -122,10 +122,10 @@ class ClusterServiceVersion:
             else:
                 # If imagepullsecret exists, add to the list
                 if not(all(x in p for x in d['spec']['template']['spec']['imagePullSecrets'])):
-                    if isinstance(d['spec']['template']['spec']['imagePullSecrets'], list):
+                    try:
                         d['spec']['template']['spec']['imagePullSecrets'].extend(p)
-                    else:
-                        raise Exception('imagePullSecrets is not of type list')   
+                    except TypeError:
+                        print('imagePullSecrets is not of type list')  
 
     def generate_spec_relatedImages(self):
         """ Generates spec.relatedImages based on information found in operator deployment annotations marked with 'olm.relatedImage.*'
