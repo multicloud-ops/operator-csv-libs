@@ -14,7 +14,7 @@ class ClusterServiceVersion:
     def __init__(self, csv, name=None, target_version=None, replaces=None, skiprange=None, logger=None):
         self.original_csv = csv
         self.csv = copy.deepcopy(self.original_csv)
-
+    
         self.original_operator_images    = []
         self.operator_images             = []
         self.annotation_related_images   = []
@@ -36,7 +36,7 @@ class ClusterServiceVersion:
 
         if skiprange:
             self.skiprange = skiprange
-
+            
         if target_version:
             self.set_version(target_version)
 
@@ -94,13 +94,13 @@ class ClusterServiceVersion:
         """ Set the image pull secret for all operator deployment deployments. Overwrites any existing pull secret
 
         :param name: String or list of strings containing name of the pull secret to add
-        :type name: string, list
+        :type name: string, list 
         """
         if isinstance(name, str):
             p = [{'name': name}]
         else:
             p = [ {'name': x} for x in name ]
-
+        
         for d in self.csv['spec']['install']['spec']['deployments']:
             d['spec']['template']['spec']['imagePullSecrets'] = p
 
@@ -118,7 +118,6 @@ class ClusterServiceVersion:
         for d in self.csv['spec']['install']['spec']['deployments']:
             if not 'imagePullSecrets' in d['spec']['template']['spec']:
                 # If imagepullsecret is missing, set it
-                d['spec']['template']['spec']['imagePullSecrets'] = []
                 d['spec']['template']['spec']['imagePullSecrets'] = p
             else:
                 # If imagepullsecret exists, add to the list
@@ -126,8 +125,7 @@ class ClusterServiceVersion:
                     if isinstance(d['spec']['template']['spec']['imagePullSecrets'], list):
                         d['spec']['template']['spec']['imagePullSecrets'].extend(p)
                     else:
-                        raise Exception('imagePullSecrets is not of type list')
-
+                        raise Exception('imagePullSecrets is not of type list')   
 
     def generate_spec_relatedImages(self):
         """ Generates spec.relatedImages based on information found in operator deployment annotations marked with 'olm.relatedImage.*'
@@ -136,7 +134,7 @@ class ClusterServiceVersion:
         if 'relatedImages' in self.csv['spec']:
             self.log.debug('Resetting existing spec.relatedImages')
         self.csv['spec']['relatedImages'] = []
-
+        
         # Hold dict of all names and images so we can find conflicting information
         images_validation = {}
         for r in self.spec_related_images:
@@ -147,7 +145,7 @@ class ClusterServiceVersion:
                     self.log.debug('overwriting')
                     self.csv['spec']['relatedImages'][r.name] = r.image
                     continue
-
+            
             self.csv['spec']['relatedImages'].append({
                 'name':     r.name,
                 'image':    r.image
@@ -222,7 +220,7 @@ class ClusterServiceVersion:
                 'name': d['name']
                 }
             del(d['name'])
-
+            
         return deployments
 
     def _update_version_references(self):
@@ -255,7 +253,7 @@ class ClusterServiceVersion:
                 )
                 self.original_operator_images.append(o)
                 self.operator_images.append(o)
-
+       
     def _get_related_images(self):
         # Capture related images from annotations
         for d in self.csv['spec']['install']['spec']['deployments']:
