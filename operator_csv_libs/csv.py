@@ -118,15 +118,14 @@ class ClusterServiceVersion:
         for d in self.csv['spec']['install']['spec']['deployments']:
             if not 'imagePullSecrets' in d['spec']['template']['spec']:
                 # If imagepullsecret is missing, set it
-                d['spec']['template']['spec']['imagePullSecrets'] = []
                 d['spec']['template']['spec']['imagePullSecrets'] = p
             else:
                 # If imagepullsecret exists, add to the list
                 if not(all(x in p for x in d['spec']['template']['spec']['imagePullSecrets'])):
-                    if isinstance(d['spec']['template']['spec']['imagePullSecrets'], list):
+                    try:
                         d['spec']['template']['spec']['imagePullSecrets'].extend(p)
-                    else:
-                        raise Exception('imagePullSecrets is not of type list')
+                    except TypeError:
+                        print('imagePullSecrets is not of type list')
 
 
     def generate_spec_relatedImages(self):
