@@ -12,6 +12,7 @@ setup(
         'pygithub',
         'dohq-artifactory',
         'slack_log_handler',
-        'requests'
+        'requests',
+        'slackclient'
     ]
 )
