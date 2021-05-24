@@ -1,4 +1,4 @@
-git+git://github.com/eveliososa/operator-csv-libs.git@master
-git+git://github.com/eveliososa/PyGithubFork.git@main
+git+git://github.com/multicloud-ops/operator-csv-libs.git@master
+git+git://github.com/multicloud-ops/PyGithubFork.git@main
 slack_log_handler==0.3.0
 slackclient==2.9.3
