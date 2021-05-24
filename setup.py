@@ -9,7 +9,7 @@ setup(
     packages=['operator_csv_libs'],
     install_requires=[
         'pyyaml==5.4.1',
-        'pygithub==1.54.1',
+        'pygithub==1.55',
         'dohq-artifactory==0.7.574 ',
         'requests==2.25.1'
     ]
