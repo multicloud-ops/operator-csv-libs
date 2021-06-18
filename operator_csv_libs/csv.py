@@ -37,7 +37,8 @@ class ClusterServiceVersion:
             self.name = self.csv['metadata']['name'].split('.')[0]
 
         # Get only X.Y.Z from target version
-        self.major_minor_patch = target_version.split('-')[0]
+        if target_version:
+            self.major_minor_patch = target_version.split('-')[0]
 
         # Only add replaces and skiprange if given and version allows for upgrades
         if replaces and self.major_minor_patch not in self.NO_UPGRADE_LIST:
