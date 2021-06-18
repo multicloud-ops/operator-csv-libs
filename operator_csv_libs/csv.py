@@ -11,6 +11,7 @@ class ClusterServiceVersion:
     LATEST_IMAGE_INDICATOR   = '-latest'
     RELATED_IMAGE_IDENTIFIER = 'olm.relatedImage.'
     TAGGED_RELATED_IMAGE_IDENTIFIER = 'olm.tag.relatedImage.'
+    NO_UPGRADE_LIST = ['3.1.1']
 
     def __init__(self, csv, name=None, target_version=None, replaces=None, skiprange=None, logger=None):
         self.original_csv = csv
@@ -24,10 +25,10 @@ class ClusterServiceVersion:
         # Holds the version information
         self.version = ''
         self.major_minor = ''
+        self.major_minor_patch = ''
         self.versioned_name = ''
         self.replaces = None
         self.skiprange = None
-        self.replaces = replaces
 
         # If name is not provided, we can try extrapolate it
         if name:
@@ -35,7 +36,14 @@ class ClusterServiceVersion:
         else:
             self.name = self.csv['metadata']['name'].split('.')[0]
 
-        if skiprange:
+        # Get only X.Y.Z from target version
+        self.major_minor_patch = target_version.split('-')[0]
+
+        # Only add replaces and skiprange if given and version allows for upgrades
+        if replaces and self.major_minor_patch not in self.NO_UPGRADE_LIST:
+            self.replaces = replaces
+
+        if skiprange and self.major_minor_patch not in self.NO_UPGRADE_LIST:
             self.skiprange = skiprange
 
         if target_version:
