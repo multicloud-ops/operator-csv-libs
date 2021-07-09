@@ -21,6 +21,7 @@ class ClusterServiceVersion:
         self.operator_images             = []
         self.annotation_related_images   = []
         self.spec_related_images         = []
+        self.init_container_images       = []
 
         # Holds the version information
         self.version = ''
@@ -59,6 +60,7 @@ class ClusterServiceVersion:
         self._manipulate_tag_images()
         self._get_operator_images()
         self._get_related_images()
+        self._get_init_container_images()
 
     def set_deployments_annotations(self, key=None, value=None):
         """Set key with value passed in for each deployment in the CSV
@@ -138,7 +140,6 @@ class ClusterServiceVersion:
                     except TypeError:
                         print('imagePullSecrets is not of type list')
 
-
     def generate_spec_relatedImages(self):
         """ Generates spec.relatedImages based on information found in operator deployment annotations marked with 'olm.relatedImage.*'
         """
@@ -180,6 +181,7 @@ class ClusterServiceVersion:
         # Merge in the updates that are done to Operatorimages and Operandimages
         self._update_operator_container_images()
         self._update_operand_images()
+        self._update_init_container_images()
 
         return self.csv
 
@@ -215,6 +217,14 @@ class ClusterServiceVersion:
         :rtype: list
         """
         return self.annotation_related_images
+
+    def get_init_container_images(self):
+        """ Return a list of images used for init containers
+
+        :return: Returns a List of Images as defined in Images class
+        :rtype: list
+        """
+        return self.init_container_images 
 
     def get_operator_deployments(self, api_version='apps/v1', kind='Deployment'):
         """ Return a list of kubernetes deployment objects constructed from the CSV deployments section
@@ -282,6 +292,18 @@ class ClusterServiceVersion:
                     )
                     self.annotation_related_images.append(o)
 
+    def _get_init_container_images(self):
+        """[Populate a list of all images that are used for the init containers]
+        """
+        for d in self.csv['spec']['install']['spec']['deployments']:
+            for c in d['spec']['template']['spec']['initContainers']:
+                o = Image(
+                    deployment = d['name'],
+                    name       = c['name'], 
+                    image      = c['image']
+                )
+                self.init_container_images.append(o)
+
     def _manipulate_tag_images(self):
         taggedImages = {}
         for d in self.csv['spec']['install']['spec']['deployments']:
@@ -303,6 +325,14 @@ class ClusterServiceVersion:
             for d in self.csv['spec']['install']['spec']['deployments']:
                 if d['name'] == image.deployment:
                     for c in d['spec']['template']['spec']['containers']:
+                        if c['name'] == image.container:
+                            c['image'] = image.image
+
+    def _update_init_container_images(self):
+        for image in self.init_container_images:
+            for d in self.csv['spec']['install']['spec']['deployments']:
+                if d['name'] == image.deployment:
+                    for c in d['spec']['template']['spec']['initContainers']:
                         if c['name'] == image.container:
                             c['image'] = image.image
 
