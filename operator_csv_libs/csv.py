@@ -296,11 +296,11 @@ class ClusterServiceVersion:
         """[Populate a list of all images that are used for the init containers]
         """
         for d in self.csv['spec']['install']['spec']['deployments']:
-            if 'initContainer' in d['spec']['template']['spec']:
+            if 'initContainers' in d['spec']['template']['spec']:
                 for c in d['spec']['template']['spec']['initContainers']:
                     o = Image(
                         deployment = d['name'],
-                        name       = c['name'], 
+                        container  = c['name'], 
                         image      = c['image']
                     )
                     self.init_container_images.append(o)
@@ -333,10 +333,9 @@ class ClusterServiceVersion:
         for image in self.init_container_images:
             for d in self.csv['spec']['install']['spec']['deployments']:
                 if d['name'] == image.deployment:
-                    if 'initContainer' in d['spec']['template']['spec']:
-                        for c in d['spec']['template']['spec']['initContainers']:
-                            if c['name'] == image.container:
-                                c['image'] = image.image
+                    for c in d['spec']['template']['spec']['initContainers']:
+                        if c['name'] == image.container:
+                            c['image'] = image.image
 
     def _update_operand_images(self):
         # Update the annotations that has been updated
