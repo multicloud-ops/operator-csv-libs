@@ -11,6 +11,7 @@ class ClusterServiceVersion:
     LATEST_IMAGE_INDICATOR   = '-latest'
     RELATED_IMAGE_IDENTIFIER = 'olm.relatedImage.'
     TAGGED_RELATED_IMAGE_IDENTIFIER = 'olm.tag.relatedImage.'
+    NO_UPGRADE_LIST = ['3.1.1']
 
     def __init__(self, csv, name=None, target_version=None, replaces=None, skiprange=None, logger=None):
         self.original_csv = csv
@@ -20,14 +21,15 @@ class ClusterServiceVersion:
         self.operator_images             = []
         self.annotation_related_images   = []
         self.spec_related_images         = []
+        self.init_container_images       = []
 
         # Holds the version information
         self.version = ''
         self.major_minor = ''
+        self.major_minor_patch = ''
         self.versioned_name = ''
         self.replaces = None
         self.skiprange = None
-        self.replaces = replaces
 
         # If name is not provided, we can try extrapolate it
         if name:
@@ -35,7 +37,15 @@ class ClusterServiceVersion:
         else:
             self.name = self.csv['metadata']['name'].split('.')[0]
 
-        if skiprange:
+        # Get only X.Y.Z from target version
+        if target_version:
+            self.major_minor_patch = target_version.split('-')[0]
+
+        # Only add replaces and skiprange if given and version allows for upgrades
+        if replaces and self.major_minor_patch not in self.NO_UPGRADE_LIST:
+            self.replaces = replaces
+
+        if skiprange and self.major_minor_patch not in self.NO_UPGRADE_LIST:
             self.skiprange = skiprange
 
         if target_version:
@@ -50,6 +60,7 @@ class ClusterServiceVersion:
         self._manipulate_tag_images()
         self._get_operator_images()
         self._get_related_images()
+        self._get_init_container_images()
 
     def set_deployments_annotations(self, key=None, value=None):
         """Set key with value passed in for each deployment in the CSV
@@ -129,7 +140,6 @@ class ClusterServiceVersion:
                     except TypeError:
                         print('imagePullSecrets is not of type list')
 
-
     def generate_spec_relatedImages(self):
         """ Generates spec.relatedImages based on information found in operator deployment annotations marked with 'olm.relatedImage.*'
         """
@@ -171,6 +181,7 @@ class ClusterServiceVersion:
         # Merge in the updates that are done to Operatorimages and Operandimages
         self._update_operator_container_images()
         self._update_operand_images()
+        self._update_init_container_images()
 
         return self.csv
 
@@ -206,6 +217,14 @@ class ClusterServiceVersion:
         :rtype: list
         """
         return self.annotation_related_images
+
+    def get_init_container_images(self):
+        """ Return a list of images used for init containers
+
+        :return: Returns a List of Images as defined in Images class
+        :rtype: list
+        """
+        return self.init_container_images 
 
     def get_operator_deployments(self, api_version='apps/v1', kind='Deployment'):
         """ Return a list of kubernetes deployment objects constructed from the CSV deployments section
@@ -273,6 +292,19 @@ class ClusterServiceVersion:
                     )
                     self.annotation_related_images.append(o)
 
+    def _get_init_container_images(self):
+        """[Populate a list of all images that are used for the init containers]
+        """
+        for d in self.csv['spec']['install']['spec']['deployments']:
+            if 'initContainers' in d['spec']['template']['spec']:
+                for c in d['spec']['template']['spec']['initContainers']:
+                    o = Image(
+                        deployment = d['name'],
+                        container  = c['name'], 
+                        image      = c['image']
+                    )
+                    self.init_container_images.append(o)
+
     def _manipulate_tag_images(self):
         taggedImages = {}
         for d in self.csv['spec']['install']['spec']['deployments']:
@@ -294,6 +326,14 @@ class ClusterServiceVersion:
             for d in self.csv['spec']['install']['spec']['deployments']:
                 if d['name'] == image.deployment:
                     for c in d['spec']['template']['spec']['containers']:
+                        if c['name'] == image.container:
+                            c['image'] = image.image
+
+    def _update_init_container_images(self):
+        for image in self.init_container_images:
+            for d in self.csv['spec']['install']['spec']['deployments']:
+                if d['name'] == image.deployment:
+                    for c in d['spec']['template']['spec']['initContainers']:
                         if c['name'] == image.container:
                             c['image'] = image.image
 
