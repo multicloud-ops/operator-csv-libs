@@ -10,7 +10,7 @@ setup(
     install_requires=[
         'pyyaml==5.4.1',
         'pygithub==1.54.1',
-        'dohq-artifactory==0.7.574 ',
+        'dohq-artifactory==0.7.658 ',
         'requests==2.25.1'
     ]
 )
