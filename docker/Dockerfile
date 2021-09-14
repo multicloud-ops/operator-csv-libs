@@ -1,4 +1,4 @@
-FROM python:3.7-alpine as base
+FROM python:3.8-alpine as base
 FROM base as builder
 
 # Run multistage build to save some space on the resulting image
