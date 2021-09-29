@@ -166,6 +166,7 @@ metadata:
       ]
     capabilities: Basic Install
     olm.skipRange: <2.1.1-202009111050
+    operators.operatorframework.io/internal-objects: '["commonservices.operator.ibm.com"]'
   labels:
     operatorframework.io/arch.amd64: supported
     operatorframework.io/arch.ppc64le: supported
