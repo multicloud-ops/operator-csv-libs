@@ -356,7 +356,10 @@ class ClusterServiceVersion:
         self.log.setLevel(logging.INFO)
 
     def _get_hidden_crds(self):
-        self.hidden_crds = ast.literal_eval(self.csv['metadata']['annotations']['operators.operatorframework.io/internal-objects'])
-
+        try:
+            self.hidden_crds = ast.literal_eval(self.csv['metadata']['annotations']['operators.operatorframework.io/internal-objects'])
+        except:
+            self.hidden_crds = []
+            
     def get_hidden_crds(self):
         return self.hidden_crds
