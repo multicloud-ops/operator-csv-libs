@@ -1,4 +1,4 @@
-import logging, sys, copy, yaml
+import logging, sys, copy, yaml, ast
 from .images import Image
 
 class _literal(str):
@@ -30,6 +30,7 @@ class ClusterServiceVersion:
         self.versioned_name = ''
         self.replaces = None
         self.skiprange = None
+        self.hidden_crds = []
 
         # If name is not provided, we can try extrapolate it
         if name:
@@ -57,6 +58,7 @@ class ClusterServiceVersion:
             self._setup_basic_logger()
 
         # Extract some other useful info
+        self._get_hidden_crds()
         self._manipulate_tag_images()
         self._get_operator_images()
         self._get_related_images()
@@ -352,3 +354,9 @@ class ClusterServiceVersion:
         out_hdlr.setLevel(logging.INFO)
         self.log.addHandler(out_hdlr)
         self.log.setLevel(logging.INFO)
+
+    def _get_hidden_crds(self):
+        self.hidden_crds = ast.literal_eval(self.csv['metadata']['annotations']['operators.operatorframework.io/internal-objects'])
+
+    def get_hidden_crds(self):
+        return self.hidden_crds
