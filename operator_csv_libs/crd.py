@@ -8,12 +8,13 @@ class CustomResourceDefinition:
 
         self.fullName = self.crd['metadata']['name']
         self.name = self.fullName.split('.')[0]
-        if 'name' in self.crd['metadata']['labels']:
-            self.operator = self.crd['metadata']['labels']['name']
-        elif 'app.kubernetes.io/name' in self.crd['metadata']['labels']:
-            self.operator = self.crd['metadata']['labels']['app.kubernetes.io/name']
-        else:
-            self.operator = ''
+        if 'labels' in self.crd['metadata']:
+            if 'name' in self.crd['metadata']['labels']:
+                self.operator = self.crd['metadata']['labels']['name']
+            elif 'app.kubernetes.io/name' in self.crd['metadata']['labels']:
+                self.operator = self.crd['metadata']['labels']['app.kubernetes.io/name']
+            else:
+                self.operator = ''
         self.namespaced = True if self.crd['spec']['scope'] == 'Namespaced' else False
 
         self._get_properties()
