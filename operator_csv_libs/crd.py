@@ -31,3 +31,15 @@ class CustomResourceDefinition:
 
     def get_properties(self):
         return self.properties
+
+    def get_name(self):
+        return self.name
+
+    def get_fullName(self):
+        return self.fullName
+
+    def get_operator(self):
+        return self.operator
+    
+    def is_namespaced(self):
+        return self.namespaced
