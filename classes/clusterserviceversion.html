@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The ClusterServiceVersion class &mdash; Operator CSV Libs 1.9.2 documentation</title>
+  <title>The ClusterServiceVersion class &mdash; Operator CSV Libs 1.9.3 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -77,25 +77,25 @@
 <h1>The <code class="docutils literal notranslate"><span class="pre">ClusterServiceVersion</span></code> class<a class="headerlink" href="#the-clusterserviceversion-class" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="operator_csv_libs.csv.ClusterServiceVersion">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">operator_csv_libs.csv.</span></span><span class="sig-name descname"><span class="pre">ClusterServiceVersion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replaces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#operator_csv_libs.csv.ClusterServiceVersion" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">operator_csv_libs.csv.</span></span><span class="sig-name descname"><span class="pre">ClusterServiceVersion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replaces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skiprange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#operator_csv_libs.csv.ClusterServiceVersion" title="Permalink to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="operator_csv_libs.csv.ClusterServiceVersion.LATEST_IMAGE_INDICATOR">
-<span class="sig-name descname"><span class="pre">LATEST_IMAGE_INDICATOR</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'-latest'</span></em><a class="headerlink" href="#operator_csv_libs.csv.ClusterServiceVersion.LATEST_IMAGE_INDICATOR" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">LATEST_IMAGE_INDICATOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'-latest'</span></em><a class="headerlink" href="#operator_csv_libs.csv.ClusterServiceVersion.LATEST_IMAGE_INDICATOR" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="operator_csv_libs.csv.ClusterServiceVersion.NO_UPGRADE_LIST">
-<span class="sig-name descname"><span class="pre">NO_UPGRADE_LIST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">['3.1.1']</span></em><a class="headerlink" href="#operator_csv_libs.csv.ClusterServiceVersion.NO_UPGRADE_LIST" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">NO_UPGRADE_LIST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['3.1.1']</span></em><a class="headerlink" href="#operator_csv_libs.csv.ClusterServiceVersion.NO_UPGRADE_LIST" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="operator_csv_libs.csv.ClusterServiceVersion.RELATED_IMAGE_IDENTIFIER">
-<span class="sig-name descname"><span class="pre">RELATED_IMAGE_IDENTIFIER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'olm.relatedImage.'</span></em><a class="headerlink" href="#operator_csv_libs.csv.ClusterServiceVersion.RELATED_IMAGE_IDENTIFIER" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">RELATED_IMAGE_IDENTIFIER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'olm.relatedImage.'</span></em><a class="headerlink" href="#operator_csv_libs.csv.ClusterServiceVersion.RELATED_IMAGE_IDENTIFIER" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="operator_csv_libs.csv.ClusterServiceVersion.TAGGED_RELATED_IMAGE_IDENTIFIER">
-<span class="sig-name descname"><span class="pre">TAGGED_RELATED_IMAGE_IDENTIFIER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'olm.tag.relatedImage.'</span></em><a class="headerlink" href="#operator_csv_libs.csv.ClusterServiceVersion.TAGGED_RELATED_IMAGE_IDENTIFIER" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">TAGGED_RELATED_IMAGE_IDENTIFIER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'olm.tag.relatedImage.'</span></em><a class="headerlink" href="#operator_csv_libs.csv.ClusterServiceVersion.TAGGED_RELATED_IMAGE_IDENTIFIER" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
