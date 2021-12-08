@@ -27,6 +27,7 @@ class Image:
         if '@' in remainder:
             self.image_name = remainder.split('@')[0]
             self.digest     = remainder.split('@')[1]
+            self.tag        = 'latest'
         elif ':' in remainder:
             self.image_name = remainder.split(':')[0]
             self.tag        = remainder.split(':')[1]
