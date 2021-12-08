@@ -37,7 +37,7 @@ class TestImages(unittest.TestCase):
 
         self.assertEqual(self.imgWithDigest.image, IMAGE_WITH_DIGEST)
         self.assertEqual(self.imgWithDigest.digest, "sha256:dummy_sha")
-        self.assertEqual(self.imgWithDigest.tag, None)
+        self.assertEqual(self.imgWithDigest.tag, 'latest')
         
         # Check image with tag to see if all values are initialized correctly
         self.assertEqual({
@@ -168,17 +168,17 @@ class TestImages(unittest.TestCase):
         newTag = "SNAPSHOT"
 
         # Check to see if there is some value returned and if that value is correct
-        self.assertEqual(self.imgWithDigest.get_tag(), None)
+        self.assertEqual(self.imgWithDigest.get_tag(), 'latest')
         self.assertEqual(self.imgWithDigest.tag, self.imgWithDigest.get_tag())
         # Add tag, and check to see if it has tag now
         self.imgWithDigest.set_tag(newTag)
-        self.assertNotEqual(self.imgWithDigest.get_tag(), None)
+        self.assertNotEqual(self.imgWithDigest.get_tag(), 'latest')
         self.assertEqual(self.imgWithDigest.tag, self.imgWithDigest.get_tag())
         
-        self.assertNotEqual(self.imgWithTag.get_tag(), None)
+        self.assertNotEqual(self.imgWithTag.get_tag(), 'latest')
         self.assertEqual(self.imgWithTag.tag, self.imgWithTag.get_tag())
         
-        self.assertNotEqual(self.imgWithoutTag.get_tag(), None)
+        self.assertNotEqual(self.imgWithoutTag.get_tag(), 'latest')
         self.assertEqual(self.imgWithoutTag.tag, self.imgWithoutTag.get_tag())
 
     def test_get_image(self):
