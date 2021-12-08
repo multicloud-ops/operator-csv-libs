@@ -178,7 +178,7 @@ class TestImages(unittest.TestCase):
         self.assertNotEqual(self.imgWithTag.get_tag(), 'latest')
         self.assertEqual(self.imgWithTag.tag, self.imgWithTag.get_tag())
         
-        self.assertNotEqual(self.imgWithoutTag.get_tag(), 'latest')
+        self.assertNotEqual(self.imgWithoutTag.get_tag(), None)
         self.assertEqual(self.imgWithoutTag.tag, self.imgWithoutTag.get_tag())
 
     def test_get_image(self):
