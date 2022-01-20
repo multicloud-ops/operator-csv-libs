@@ -83,6 +83,8 @@ class ArtifactoryRepo:
 
     def get_image_digest(self):
         # We know we're always querying for sha256
+        if self.image.get_digest():
+            return self.image.get_digest()
         return 'sha256:{}'.format(self._get_raw_image_digest())
 
     def _get_artifactory_repo(self):
@@ -94,8 +96,6 @@ class ArtifactoryRepo:
         return '{}/{}'.format(r, p)
 
     def _get_raw_image_digest(self):
-        if self.image.get_digest():
-            return self.image.get_digest()
         manifestpath = '/'.join([
                         self.artifactory_base,
                         self._get_artifactory_repo(), # We have to massage the repo for artifactory
@@ -115,8 +115,6 @@ class ArtifactoryRepo:
         return 'sha256:{}'.format(self._get_raw_manifest_list_digest())
 
     def _get_raw_manifest_list_digest(self):
-        if self.image.get_digest():
-            return self.image.get_digest()
         listpath = '/'.join([
                         self.artifactory_base,
                         self._get_artifactory_repo(), # We have to massage the repo for artifactory
@@ -220,6 +218,8 @@ class DockerRepo:
         self.tag = image.get_tag()
 
     def get_image_digest(self):
+        if self.image.get_digest():
+            return self.image.get_digest()
         return self._get_digest(manifest_list=False)
 
     def get_manifest_list_digest(self):
@@ -254,8 +254,6 @@ class DockerRepo:
         :return: docker manifest/manifest list digest
         :rtype: string
         """
-        if self.image.get_digest():
-            return self.image.get_digest()
         ## Get token
         t=requests.get('https://auth.docker.io/token?scope=repository%3A{org}%2F{repo}%3Apull&service=registry.docker.io'.format(org=self.org, repo=self.repo))
         token=t.json()['token']
