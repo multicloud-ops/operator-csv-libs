@@ -11,6 +11,6 @@ setup(
         'pyyaml==5.4.1',
         'pygithub==1.54.1',
         'dohq-artifactory==0.7.574 ',
-        'requests==2.27.1'
+        'requests==2.28.0'
     ]
 )
