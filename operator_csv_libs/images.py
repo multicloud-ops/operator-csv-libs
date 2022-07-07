@@ -24,14 +24,19 @@ class Image:
         # Everything before the last '/' should make up repo
         self.image_repo = '/'.join(image.split('/')[:-1])
         remainder = image.split('/')[-1]
-        if '@' in remainder:
+        if '@' in remainder and len(image.split(':')) > 2: #image name, tag and digest
+            self.digest     = remainder.split('@')[1]
+            self.image_name = remainder.split(':')[0]
+            self.tag        = remainder.split('@')[0].split(':')[0]
+            self.image      = f"{self.image_repo}/{self.image_name}@{self.digest}" 
+        elif '@' in remainder: #image name and digest
             self.image_name = remainder.split('@')[0]
             self.digest     = remainder.split('@')[1]
             self.tag        = 'latest'
-        elif ':' in remainder:
+        elif ':' in remainder: #image name and tag
             self.image_name = remainder.split(':')[0]
             self.tag        = remainder.split(':')[1]
-        else:
+        else: #only image name
             self.image_name = remainder
             self.tag        = 'latest'
 
