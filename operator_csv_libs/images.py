@@ -27,7 +27,7 @@ class Image:
         if '@' in remainder and len(image.split(':')) > 2: #image name, tag and digest
             self.digest     = remainder.split('@')[1]
             self.image_name = remainder.split(':')[0]
-            self.tag        = remainder.split('@')[0].split(':')[0]
+            self.tag        = remainder.split('@')[0].split(':')[-1]
             self.image      = f"{self.image_repo}/{self.image_name}@{self.digest}" 
         elif '@' in remainder: #image name and digest
             self.image_name = remainder.split('@')[0]
