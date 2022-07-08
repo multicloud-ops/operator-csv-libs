@@ -75,6 +75,12 @@ class Image:
             self.full_image = self.full_image.replace(self.image_repo, repo)
         self.image_repo = repo
         return True
+
+    def get_full_image(self):
+        return self.full_image
+
+    def set_full_image(self, full_image):
+        self.full_image = full_image
     
     def get_image_repo(self):
         """Returns the image_repo section of the overall image
