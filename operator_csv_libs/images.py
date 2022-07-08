@@ -20,6 +20,7 @@ class Image:
         self.container  = container
         self.tag        = None
         self.digest     = None
+        self.full_image = None
 
         # Everything before the last '/' should make up repo
         self.image_repo = '/'.join(image.split('/')[:-1])
@@ -28,6 +29,7 @@ class Image:
             self.digest     = remainder.split('@')[1]
             self.image_name = remainder.split(':')[0]
             self.tag        = remainder.split('@')[0].split(':')[-1]
+            self.full_image = self.image
             self.image      = f"{self.image_repo}/{self.image_name}@{self.digest}" 
         elif '@' in remainder: #image name and digest
             self.image_name = remainder.split('@')[0]
@@ -69,6 +71,8 @@ class Image:
 
     def set_image_repo(self, repo):
         self.image      = self.image.replace(self.image_repo, repo)
+        if self.full_image:
+            self.full_image = self.full_image.replace(self.image_repo, repo)
         self.image_repo = repo
         return True
     
