@@ -48,7 +48,7 @@ class Catalog:
                     raise CatalogError(f"Cannot find a schema value in {data}")
 
                 if data['schema'] == 'olm.package':
-                    if self.package is not '':
+                    if self.package != '':
                         raise CatalogError(f"Found 2 packages in a single file, unexpected use case. Please update the code base")
                     self.package = data
                 elif data['schema'] == 'olm.channel':
