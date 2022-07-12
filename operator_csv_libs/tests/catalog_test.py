@@ -1,6 +1,8 @@
+import os
 import unittest
 from ..catalog import Catalog
 
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 PACKAGE = {
     "schema": "olm.package",
@@ -76,7 +78,7 @@ BUNDLES = [
 class TestCatalog(unittest.TestCase):
 
     def setUp(self):
-        self.catalog = Catalog(file='./test_files/valid_catalog.json')
+        self.catalog = Catalog(file=f"{THIS_DIR}/test_files/valid_catalog.json")
 
     def test_init(self):
         self.assertEqual(self.catalog.package, PACKAGE)
