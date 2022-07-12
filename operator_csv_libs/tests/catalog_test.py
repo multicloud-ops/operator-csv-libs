@@ -26,8 +26,14 @@ TEST_CHANNEL = {
     "package": "etcd"
 }
 
+TEST_CHANNEL_ENTRY = {
+    "name": "etcdoperator-community.v100",
+    "replaces": "etcdoperator-community.v0.9.4",
+    "skiprange": "<etcdoperator-community.v100"
+}
+
 BUNDLES = [
-    {
+{
     "schema": "olm.bundle",
     "name": "etcdoperator-community.v0.6.1",
     "package": "etcd",
@@ -101,3 +107,8 @@ class TestCatalog(unittest.TestCase):
     def test_add_channel(self):
         self.catalog.add_channel('testChannel', 'etcd')
         self.assertTrue(TEST_CHANNEL in self.catalog.get_channels())
+
+    def test_add_channel_entry(self):
+        self.catalog.add_channel_entry(channel='alpha', name='etcdoperator-community.v100', replaces='etcdoperator-community.v0.9.4', skiprange='<etcdoperator-community.v100')
+        entries = self.catalog.get_channels()[0]['entries']
+        self.assertTrue(TEST_CHANNEL_ENTRY in entries)
