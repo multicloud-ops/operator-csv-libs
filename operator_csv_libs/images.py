@@ -20,17 +20,25 @@ class Image:
         self.container  = container
         self.tag        = None
         self.digest     = None
+        self.full_image = None
 
         # Everything before the last '/' should make up repo
         self.image_repo = '/'.join(image.split('/')[:-1])
         remainder = image.split('/')[-1]
-        if '@' in remainder:
+        if '@' in remainder and len(image.split(':')) > 2: #image name, tag and digest
+            self.digest     = remainder.split('@')[1]
+            self.image_name = remainder.split(':')[0]
+            self.tag        = remainder.split('@')[0].split(':')[-1]
+            self.full_image = self.image
+            self.image      = f"{self.image_repo}/{self.image_name}@{self.digest}" 
+        elif '@' in remainder: #image name and digest
             self.image_name = remainder.split('@')[0]
             self.digest     = remainder.split('@')[1]
-        elif ':' in remainder:
+            self.tag        = 'latest'
+        elif ':' in remainder: #image name and tag
             self.image_name = remainder.split(':')[0]
             self.tag        = remainder.split(':')[1]
-        else:
+        else: #only image name
             self.image_name = remainder
             self.tag        = 'latest'
 
@@ -63,8 +71,16 @@ class Image:
 
     def set_image_repo(self, repo):
         self.image      = self.image.replace(self.image_repo, repo)
+        if self.full_image:
+            self.full_image = self.full_image.replace(self.image_repo, repo)
         self.image_repo = repo
         return True
+
+    def get_full_image(self):
+        return self.full_image
+
+    def set_full_image(self, full_image):
+        self.full_image = full_image
     
     def get_image_repo(self):
         """Returns the image_repo section of the overall image

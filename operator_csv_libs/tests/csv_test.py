@@ -49,6 +49,7 @@ DUMMY_CSV = {
     "kind": "ClusterServiceVersion",
     "metadata": {
         "annotations": {
+            "operators.operatorframework.io/internal-objects": '["crd.dummy.ibm.com"]',
             "olm.skipRange": "metadataDummySkipRange"
         },
         "name": "metadataDummyName"
@@ -538,3 +539,7 @@ class TestCSV(unittest.TestCase):
     def test__setup_basic_logger(self):
         # should not be tested because it only sets up logger
         self.assertEqual(True, True)
+
+    def test__get_hidden_crds(self):
+        for crd in self.csvWithoutParams.get_hidden_crds():
+            self.assertIn(crd, ["crd.dummy.ibm.com"])

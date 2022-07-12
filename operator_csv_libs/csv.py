@@ -1,4 +1,4 @@
-import logging, sys, copy, yaml
+import logging, sys, copy, yaml, ast
 from .images import Image
 
 class _literal(str):
@@ -30,6 +30,7 @@ class ClusterServiceVersion:
         self.versioned_name = ''
         self.replaces = None
         self.skiprange = None
+        self.hidden_crds = []
 
         # If name is not provided, we can try extrapolate it
         if name:
@@ -57,6 +58,7 @@ class ClusterServiceVersion:
             self._setup_basic_logger()
 
         # Extract some other useful info
+        self._get_hidden_crds()
         self._manipulate_tag_images()
         self._get_operator_images()
         self._get_related_images()
@@ -158,11 +160,16 @@ class ClusterServiceVersion:
                     self.log.debug('overwriting')
                     self.csv['spec']['relatedImages'][r.name] = r.image
                     continue
-
-            self.csv['spec']['relatedImages'].append({
-                'name':     r.name,
-                'image':    r.image
-            })
+            if r.full_image:
+                self.csv['spec']['relatedImages'].append({
+                    'name':     r.name,
+                    'image':    r.full_image
+                })
+            else:
+                self.csv['spec']['relatedImages'].append({
+                    'name':     r.name,
+                    'image':    r.image
+                })
 
     def get_owned_crds(self):
         """ Returns a list of owned CustomResourceDefinitions
@@ -342,7 +349,10 @@ class ClusterServiceVersion:
         for image in self.annotation_related_images:
             for d in self.csv['spec']['install']['spec']['deployments']:
                 if d['name'] == image.deployment:
-                    d['spec']['template']['metadata']['annotations'][self.RELATED_IMAGE_IDENTIFIER + image.name] = image.image
+                    if image.full_image:
+                        d['spec']['template']['metadata']['annotations'][self.RELATED_IMAGE_IDENTIFIER + image.name] = image.full_image
+                    else:
+                        d['spec']['template']['metadata']['annotations'][self.RELATED_IMAGE_IDENTIFIER + image.name] = image.image
 
     def _setup_basic_logger(self):
         # Setup logging to stdout if we're not provided a logger
@@ -352,3 +362,12 @@ class ClusterServiceVersion:
         out_hdlr.setLevel(logging.INFO)
         self.log.addHandler(out_hdlr)
         self.log.setLevel(logging.INFO)
+
+    def _get_hidden_crds(self):
+        try:
+            self.hidden_crds = ast.literal_eval(self.csv['metadata']['annotations']['operators.operatorframework.io/internal-objects'])
+        except:
+            self.hidden_crds = []
+            
+    def get_hidden_crds(self):
+        return self.hidden_crds
