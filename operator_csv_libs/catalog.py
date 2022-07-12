@@ -94,7 +94,8 @@ class Catalog:
         self.channels.append({
             "schema": "olm.channel",
             "name": channel,
-            "package": package
+            "package": package, 
+            "entries": []
         })
     
     def add_channel_entry(self, channel, name, skiprange=None, replaces=None):

@@ -23,7 +23,8 @@ CHANNELS = [{
 TEST_CHANNEL = {
     "schema": "olm.channel",
     "name": "testChannel",
-    "package": "etcd"
+    "package": "etcd",
+    "entries": []
 }
 
 TEST_CHANNEL_ENTRY = {
@@ -112,3 +113,22 @@ class TestCatalog(unittest.TestCase):
         self.catalog.add_channel_entry(channel='alpha', name='etcdoperator-community.v100', replaces='etcdoperator-community.v0.9.4', skiprange='<etcdoperator-community.v100')
         entries = self.catalog.get_channels()[0]['entries']
         self.assertIn(TEST_CHANNEL_ENTRY, entries)
+
+    def test_set_default_channel(self):
+        self.catalog.add_channel('testChannel', 'etcd')
+        self.catalog.set_default_channel('testChannel')
+        self.assertEqual(self.catalog.get_default_channel(), 'testChannel')
+        self.assertEqual(self.catalog.package['defaultChannel'], 'testChannel')
+
+    def test_remove_channel(self):
+        self.catalog.add_channel('testChannel', 'etcd')
+        self.assertIn(TEST_CHANNEL, self.catalog.get_channels())
+        self.catalog.remove_channel('testChannel')
+        self.assertNotIn(TEST_CHANNEL, self.catalog.get_channels())
+        self.catalog.remove_channel('alpha')
+        self.assertEqual(self.catalog.get_bundles(), [])
+
+    def test_remove_bundle(self):
+        self.catalog.remove_bundle('etcdoperator-community.v0.6.1')
+        bundle_names = [ i['name'] for i in self.catalog.get_bundles() ]
+        self.assertNotIn('etcdoperator-community.v0.6.1', bundle_names)
