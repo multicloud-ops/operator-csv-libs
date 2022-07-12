@@ -49,7 +49,7 @@ class Catalog:
 
                 if data['schema'] == 'olm.package':
                     if self.package is not '':
-                        CatalogError(f"Found 2 packages in a single file, unexpected use case. Please update the code base")
+                        raise CatalogError(f"Found 2 packages in a single file, unexpected use case. Please update the code base")
                     self.package = data
                 elif data['schema'] == 'olm.channel':
                     self.channels.append(data)
@@ -106,6 +106,6 @@ class Catalog:
             data['replaces'] = replaces
         for c in self.channels:
             if c['name'] == channel:
-                c['entry'] == []
+                c['entry'] = []
                 c['entry'].append(data)
 
