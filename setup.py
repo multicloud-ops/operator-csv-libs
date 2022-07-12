@@ -8,7 +8,7 @@ setup(
     url='https://github.com/multicloud-ops/operator-csv-libs',
     packages=['operator_csv_libs'],
     install_requires=[
-        'pyyaml==5.4.1',
+        'pyyaml==6.0',
         'pygithub==1.55',
         'dohq-artifactory==0.7.574 ',
         'requests==2.27.1'
