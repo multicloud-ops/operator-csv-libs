@@ -160,11 +160,16 @@ class ClusterServiceVersion:
                     self.log.debug('overwriting')
                     self.csv['spec']['relatedImages'][r.name] = r.image
                     continue
-
-            self.csv['spec']['relatedImages'].append({
-                'name':     r.name,
-                'image':    r.image
-            })
+            if r.full_image:
+                self.csv['spec']['relatedImages'].append({
+                    'name':     r.name,
+                    'image':    r.full_image
+                })
+            else:
+                self.csv['spec']['relatedImages'].append({
+                    'name':     r.name,
+                    'image':    r.image
+                })
 
     def get_owned_crds(self):
         """ Returns a list of owned CustomResourceDefinitions
@@ -344,7 +349,10 @@ class ClusterServiceVersion:
         for image in self.annotation_related_images:
             for d in self.csv['spec']['install']['spec']['deployments']:
                 if d['name'] == image.deployment:
-                    d['spec']['template']['metadata']['annotations'][self.RELATED_IMAGE_IDENTIFIER + image.name] = image.image
+                    if image.full_image:
+                        d['spec']['template']['metadata']['annotations'][self.RELATED_IMAGE_IDENTIFIER + image.name] = image.full_image
+                    else:
+                        d['spec']['template']['metadata']['annotations'][self.RELATED_IMAGE_IDENTIFIER + image.name] = image.image
 
     def _setup_basic_logger(self):
         # Setup logging to stdout if we're not provided a logger
