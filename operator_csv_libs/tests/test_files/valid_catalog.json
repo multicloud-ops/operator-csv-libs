@@ -55,6 +55,6 @@
     "package": "etcd",
     "entries": [
         {"name":"etcdoperator-community.v0.6.1"},
-        {"name":"etcdoperator-community.v0.9.4", "replaces":"etcdoperator-community.v0.6.1"},
+        {"name":"etcdoperator-community.v0.9.4", "replaces":"etcdoperator-community.v0.6.1"}
     ]
 }

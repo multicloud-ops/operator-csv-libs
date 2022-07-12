@@ -106,6 +106,7 @@ class Catalog:
             data['replaces'] = replaces
         for c in self.channels:
             if c['name'] == channel:
-                c['entry'] = []
-                c['entry'].append(data)
+                if 'entries' in c:
+                    c['entries'] = []
+                c['entries'].append(data)
 
