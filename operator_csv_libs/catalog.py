@@ -71,7 +71,7 @@ class Catalog:
         self.package['defaultChannel'] = channel
 
     def write_new_file(self, filename='./catalog.json'):
-        with open(filename, 'a') as f:
+        with open(filename, 'w') as f:
             json.dump(self.package, f, indent=self.indent)
             for c in self.channels:
                 json.dump(c, f, indent=self.indent)
