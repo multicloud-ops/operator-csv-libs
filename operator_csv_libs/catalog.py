@@ -73,13 +73,13 @@ class Catalog:
     def write_new_file(self, filename='./catalog.json'):
         with open(filename, 'w') as f:
             json.dump(self.package, f, indent=self.indent)
-            filename.write("\n")
+            f.write("\n")
             for c in self.channels:
                 json.dump(c, f, indent=self.indent)
-                filename.write("\n")
+                f.write("\n")
             for b in self.bundles:
                 json.dump(b, f, indent=self.indent)
-                filename.write("\n")
+                f.write("\n")
 
     def remove_channel(self, channel):
         for c in self.channels:
