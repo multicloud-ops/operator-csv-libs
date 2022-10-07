@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import json
+from natsort import natsorted
 
 # Setup logging to stdout
 log = logging.getLogger(__name__)
@@ -140,4 +141,16 @@ class Catalog:
                 if 'entries' in c:
                     c['entries'] = []
                 c['entries'].append(data)
+                
+    def get_latest_channel_entry(self, channel):
+        names = [e['name'] for e in channel['entries'] ]
+        names = natsorted(names)
+        return names[-1]
+    
+    def __str__(self):
+        ret = ''
+        ret += f"Package: {self.package['name']}\n"
+        for c in self.channels:
+            ret += f"\tChannel: {c['name']}\tLatest entry: {self.get_latest_channel_entry(c)}\n"
+        return ret
 
