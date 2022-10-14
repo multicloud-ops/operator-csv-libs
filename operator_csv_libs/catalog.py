@@ -295,7 +295,7 @@ class OperatorCatalog:
     #Get a particular catalog whose operator name matches the one provided
     def get_catalog(self, operator_name):
         #Sanity check whether the catalog exists for the provided operator name
-        if operator_name in self.catalogs.keys():
+        if operator_name not in self.catalogs.keys():
             raise CatalogError(f"Catalog not found for operator {operator_name}")
         
         #Return the catalog
