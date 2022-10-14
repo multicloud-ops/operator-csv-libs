@@ -2,6 +2,9 @@ import os
 import unittest
 from ..catalog import Catalog, OperatorCatalog
 
+#Make sure the tests run in the specified order
+unittest.TestLoader.sortTestMethodsUsing = None
+
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 CATALOG_1_OPERATOR_NAME = 'etcd1'
