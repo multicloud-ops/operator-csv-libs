@@ -211,11 +211,11 @@ class TestOperatorCatalog(unittest.TestCase):
     def test_init(self):
         #Assert that both catalog 1 and catalog 2 are read in (but not catalog 3 as we will add that in from a file later)
         self.assertEqual(self.operatorcatalog.catalogs[CATALOG_1_OPERATOR_NAME].package, CATALOG_1_PACKAGE)
-        self.assertEqual(self.operatorcatalog.catalogs[CATALOG_1_OPERATOR_NAME].channels, CATALOG_1_CHANNELS)
-        self.assertEqual(self.operatorcatalog.catalogs[CATALOG_1_OPERATOR_NAME].bundles, CATALOG_1_BUNDLES)
+        self.assertCountEqual(self.operatorcatalog.catalogs[CATALOG_1_OPERATOR_NAME].channels, CATALOG_1_CHANNELS)
+        self.assertCountEqual(self.operatorcatalog.catalogs[CATALOG_1_OPERATOR_NAME].bundles, CATALOG_1_BUNDLES)
         self.assertEqual(self.operatorcatalog.catalogs[CATALOG_2_OPERATOR_NAME].package, CATALOG_2_PACKAGE)
-        self.assertEqual(self.operatorcatalog.catalogs[CATALOG_2_OPERATOR_NAME].channels, CATALOG_2_CHANNELS)
-        self.assertEqual(self.operatorcatalog.catalogs[CATALOG_2_OPERATOR_NAME].bundles, CATALOG_2_BUNDLES)
+        self.assertCountEqual(self.operatorcatalog.catalogs[CATALOG_2_OPERATOR_NAME].channels, CATALOG_2_CHANNELS)
+        self.assertCountEqual(self.operatorcatalog.catalogs[CATALOG_2_OPERATOR_NAME].bundles, CATALOG_2_BUNDLES)
 
     def test_remove_catalog(self):
         #Assert the catalog exists
@@ -255,14 +255,14 @@ class TestOperatorCatalog(unittest.TestCase):
 
         #Assert all catalogs equal their respective expected values in the response of the get_catalogs function
         self.assertEqual(self.operatorcatalog.get_catalogs()[CATALOG_1_OPERATOR_NAME].package, CATALOG_1_PACKAGE)
-        self.assertEqual(self.operatorcatalog.get_catalogs()[CATALOG_1_OPERATOR_NAME].channels, CATALOG_1_CHANNELS)
-        self.assertEqual(self.operatorcatalog.get_catalogs()[CATALOG_1_OPERATOR_NAME].bundles, CATALOG_1_BUNDLES)
+        self.assertCountEqual(self.operatorcatalog.get_catalogs()[CATALOG_1_OPERATOR_NAME].channels, CATALOG_1_CHANNELS)
+        self.assertCountEqual(self.operatorcatalog.get_catalogs()[CATALOG_1_OPERATOR_NAME].bundles, CATALOG_1_BUNDLES)
         self.assertEqual(self.operatorcatalog.get_catalogs()[CATALOG_2_OPERATOR_NAME].package, CATALOG_2_PACKAGE)
-        self.assertEqual(self.operatorcatalog.get_catalogs()[CATALOG_2_OPERATOR_NAME].channels, CATALOG_2_CHANNELS)
-        self.assertEqual(self.operatorcatalog.get_catalogs()[CATALOG_2_OPERATOR_NAME].bundles, CATALOG_2_BUNDLES)
+        self.assertCountEqual(self.operatorcatalog.get_catalogs()[CATALOG_2_OPERATOR_NAME].channels, CATALOG_2_CHANNELS)
+        self.assertCountEqual(self.operatorcatalog.get_catalogs()[CATALOG_2_OPERATOR_NAME].bundles, CATALOG_2_BUNDLES)
         self.assertEqual(self.operatorcatalog.get_catalogs()[CATALOG_3_OPERATOR_NAME].package, CATALOG_3_PACKAGE)
-        self.assertEqual(self.operatorcatalog.get_catalogs()[CATALOG_3_OPERATOR_NAME].channels, CATALOG_3_CHANNELS)
-        self.assertEqual(self.operatorcatalog.get_catalogs()[CATALOG_3_OPERATOR_NAME].bundles, CATALOG_3_BUNDLES)
+        self.assertCountEqual(self.operatorcatalog.get_catalogs()[CATALOG_3_OPERATOR_NAME].channels, CATALOG_3_CHANNELS)
+        self.assertCountEqual(self.operatorcatalog.get_catalogs()[CATALOG_3_OPERATOR_NAME].bundles, CATALOG_3_BUNDLES)
     
     def test_get_catalogs_by_substring(self):
         #Assert catalog 1 is a key in the response when searching for catalog 1, but not catalog 2
@@ -281,11 +281,11 @@ class TestOperatorCatalog(unittest.TestCase):
 
         #Assert catalog 3 equals its respective expected values in the response of the get_catalogs_by_substring function
         self.assertEqual(self.operatorcatalog.get_catalogs_by_substring(CATALOG_3_OPERATOR_NAME)[CATALOG_3_OPERATOR_NAME].package, CATALOG_3_PACKAGE)
-        self.assertEqual(self.operatorcatalog.get_catalogs_by_substring(CATALOG_3_OPERATOR_NAME)[CATALOG_3_OPERATOR_NAME].channels, CATALOG_3_CHANNELS)
-        self.assertEqual(self.operatorcatalog.get_catalogs_by_substring(CATALOG_3_OPERATOR_NAME)[CATALOG_3_OPERATOR_NAME].bundles, CATALOG_3_BUNDLES)
+        self.assertCountEqual(self.operatorcatalog.get_catalogs_by_substring(CATALOG_3_OPERATOR_NAME)[CATALOG_3_OPERATOR_NAME].channels, CATALOG_3_CHANNELS)
+        self.assertCountEqual(self.operatorcatalog.get_catalogs_by_substring(CATALOG_3_OPERATOR_NAME)[CATALOG_3_OPERATOR_NAME].bundles, CATALOG_3_BUNDLES)
     
     def test_get_catalog(self):
         #Assert catalog 1 equals its respective expected values in the response of the get_catalog function
         self.assertEqual(self.operatorcatalog.get_catalogs(CATALOG_1_OPERATOR_NAME).package, CATALOG_1_PACKAGE)
-        self.assertEqual(self.operatorcatalog.get_catalogs(CATALOG_1_OPERATOR_NAME).channels, CATALOG_1_CHANNELS)
-        self.assertEqual(self.operatorcatalog.get_catalogs(CATALOG_1_OPERATOR_NAME).bundles, CATALOG_1_BUNDLES)
+        self.assertCountEqual(self.operatorcatalog.get_catalogs(CATALOG_1_OPERATOR_NAME).channels, CATALOG_1_CHANNELS)
+        self.assertCountEqual(self.operatorcatalog.get_catalogs(CATALOG_1_OPERATOR_NAME).bundles, CATALOG_1_BUNDLES)
