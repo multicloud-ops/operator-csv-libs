@@ -304,7 +304,7 @@ class OperatorCatalog:
     #Remove a particular catalog whose operator name matches the one provided
     def remove_catalog(self, operator_name):
         #Sanity check whether the catalog exists for the provided operator name
-        if not operator_name in self.catalogs.keys():
+        if operator_name not in self.catalogs.keys():
             raise CatalogError(f"Catalog not found for operator {operator_name}")
         
         #Remove the catalog
