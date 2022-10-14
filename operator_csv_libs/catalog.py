@@ -232,8 +232,13 @@ class OperatorCatalog:
         
         #If the operator catalog path does exist, then loop through its subdirectories
         for subdirectory in os.listdir(path):
-            if os.path.isdir(subdirectory):
-                self.add_catalog_from_directory(f"{path}/{subdirectory}")
+            if os.path.isdir(f"{path}/{subdirectory}"):
+                #If the directory only contains one file, then attempt to load the catalog from the file
+                files = os.listdir(f"{path}/{subdirectory}")
+                if len(files) == 1:
+                    self.add_catalog_from_file(f"{path}/{subdirectory}/{files[0]}")
+                else:
+                    self.add_catalog_from_directory(f"{path}/{subdirectory}")
     
     #Add a new catalog into the operator catalog by loading it from a file
     def add_catalog_from_file(self, path):
