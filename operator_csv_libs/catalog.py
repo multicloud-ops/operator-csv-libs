@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import json
+from operator import itemgetter
 from natsort import natsorted
 
 # Setup logging to stdout
@@ -40,7 +41,14 @@ class Catalog:
             self._load_catalog_from_json_stream_file(file)
         #Read in data from a directory of json files
         elif os.path.isdir(file):
-            self._load_catalog_from_directory(file)
+            #Detect whether there is just one, or multiple files in the directory
+            #If there is just one file in the directory, chances are it's a catalog.json
+            #Therefore, in this case we try to load it from the file instead of the directory
+            files_in_dir = os.listdir(file)
+            if len(files_in_dir) == 1:
+                self._load_catalog_from_json_stream_file(f"{file}/{files_in_dir[0]}")
+            else:
+                self._load_catalog_from_directory(file)
 
     #Load the Catalog object using a single json stream file
     def _load_catalog_from_json_stream_file(self, file):
@@ -110,6 +118,18 @@ class Catalog:
                 #Read in an olm bundle object
                 elif data['schema'] == 'olm.bundle':
                     self.bundles.append(data)
+    
+    #Get the latest channel using natsort
+    def _get_latest_channel(self):
+        #Sanity check whether the channels are empty, in which case retern None
+        if len(self.channels) == 0:
+            return None
+        
+        #Natsort the channels by their name
+        sorted_channels = natsorted(self.channels, key=itemgetter(*['name']))
+
+        #Return the most up-to-date channel based on natsort result
+        return sorted_channels[-1]
 
     def get_channels(self):
         return self.channels
@@ -172,25 +192,56 @@ class Catalog:
             with open(f"{directory}/olm.bundle-{b['name']}.json", 'w') as bundle_file:
                 json.dump(b, bundle_file, indent=self.indent)
 
+    #Remove a channel and all bundles that it contains
     def remove_channel(self, channel):
+        #Loop through the channels and check to see if the provided channel name matches the found channel name
         for c in self.channels:
             if c['name'] == channel:
-                for e in c['entries']:
-                    self.remove_bundle(e['name'])
+                #If so, first remove all the bundles it contains
+                while len(c['entries']) > 0:
+                    self.remove_bundle(c['entries'][0]['name'])
+                #Then, remove the channel
                 self.channels.remove(c)
+                log.info("Removed channel %s", channel)
+                #Check if there are any further channels remaining, if not, then return without updating the default channel
+                if len(self.channels) == 0:
+                    log.warning("There are no channels remaining in catalog %s", self.package['name'])
+                    return
+                #Finally, if the removed channel is the current default channel and there exist remaining channels, update the default channel automatically
+                if channel == self.get_default_channel():
+                    self.set_default_channel(self._get_latest_channel())
 
+    #Remove a bundle, and if that bundle is contained in a channel, remove it from the channel as well
     def remove_bundle(self, name):
-        for b in self.bundles:
-            if b['name'] == name:
-                self.bundles.remove(b)
+        #Loop through all bundles in the object
+        for bundle in self.bundles:
+            #If the desired bundle is found, then proceed to remove it
+            if bundle['name'] == name:
+                #First determine if the bundle is contained in any channels, and remove its reference there
+                for channel in self.channels:
+                    for entry in channel['entries']:
+                        if bundle['name'] == entry['name']:
+                            channel['entries'].remove(entry)
+                #Then, remove the bundle itself
+                self.bundles.remove(bundle)
+                log.info("Removed bundle %s", name)
 
     def add_channel(self, channel, package):
+        #Add the channel
         self.channels.append({
             "schema": "olm.channel",
             "name": channel,
             "package": package, 
             "entries": []
         })
+        #Check if the added channel is the only channel in the Catalog
+        if len(self.channels) != 1:
+            return
+        #If so, check if the default channel in the package is the added channel
+        if self.get_default_channel() == channel:
+            return
+        #If not, then update the default channel to the added channel
+        self.set_default_channel(channel)
     
     def add_channel_entry(self, channel, name, skiprange=None, replaces=None):
         data = {}
