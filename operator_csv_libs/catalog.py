@@ -198,11 +198,16 @@ class Catalog:
         for c in self.channels:
             if c['name'] == channel:
                 #If so, first remove all the bundles it contains
-                for e in c['entries']:
-                    self.remove_bundle(e['name'])
+                while len(c['entries']) > 0:
+                    self.remove_bundle(c['entries'][0]['name'])
                 #Then, remove the channel
                 self.channels.remove(c)
-                #Finally, if the channel is the current default channel, update the default channel automatically
+                log.info("Removed channel %s", channel)
+                #Check if there are any further channels remaining, if not, then return without updating the default channel
+                if len(self.channels) == 0:
+                    log.warning("There are no channels remaining in catalog %s", self.package['name'])
+                    return
+                #Finally, if the removed channel is the current default channel and there exist remaining channels, update the default channel automatically
                 if channel == self.get_default_channel():
                     self.set_default_channel(self._get_latest_channel())
 
@@ -219,14 +224,24 @@ class Catalog:
                             channel['entries'].remove(entry)
                 #Then, remove the bundle itself
                 self.bundles.remove(bundle)
+                log.info("Removed bundle %s", name)
 
     def add_channel(self, channel, package):
+        #Add the channel
         self.channels.append({
             "schema": "olm.channel",
             "name": channel,
             "package": package, 
             "entries": []
         })
+        #Check if the added channel is the only channel in the Catalog
+        if len(self.channels) != 1:
+            return
+        #If so, check if the default channel in the package is the added channel
+        if self.get_default_channel() == channel:
+            return
+        #If not, then update the default channel to the added channel
+        self.set_default_channel(channel)
     
     def add_channel_entry(self, channel, name, skiprange=None, replaces=None):
         data = {}
