@@ -221,13 +221,14 @@ class Catalog:
         for bundle in self.bundles:
             #If the desired bundle is found, then proceed to check if it belongs to another channel
             if bundle['name'] == bundle_name:
-                #First determine if the bundle is contained in any channels, and remove its reference there
                 for channel in self.channels:
                     for entry in channel['entries']:
+                        #First determine if the bundle is contained in the provided channel, and remove its reference there
                         if channel['name'] == channel_name:
                             if bundle['name'] == entry['name']:
                                 channel['entries'].remove(entry)
                                 log.info("Removed bundle entry %s from channel %s", bundle_name, channel_name)
+                        #If it belongs to any other channel, set the multi-channel-bundle boolean to true so that the bundle is not removed
                         else:
                             if bundle['name'] == entry['name']:
                                 multi_channel_bundle = True
