@@ -164,11 +164,12 @@ class TestCatalog(unittest.TestCase):
 
     def test_remove_channel(self):
         self.catalog.add_channel('testChannel', 'etcd')
+        self.catalog.add_channel_entry(channel='testChannel', name='etcdoperator-community.v0.6.1')
         self.assertIn(TEST_CHANNEL, self.catalog.get_channels())
+        self.assertIn(BUNDLE_061, self.catalog.get_bundles())
         self.catalog.remove_channel('testChannel')
         self.assertNotIn(TEST_CHANNEL, self.catalog.get_channels())
-        self.catalog.remove_channel('alpha')
-        self.assertEqual(self.catalog.get_bundles(), [])
+        self.assertIn(BUNDLE_061, self.catalog.get_bundles())
 
     def test_remove_bundle(self):
         self.catalog.remove_bundle('etcdoperator-community.v0.6.1')
