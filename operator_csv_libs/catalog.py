@@ -199,7 +199,7 @@ class Catalog:
             if c['name'] == channel:
                 #If so, first remove all the bundles it contains
                 while len(c['entries']) > 0:
-                    self._remove_bundle_from_channel(c['entries'][0]['name'], channel)
+                    self.remove_bundle_from_channel(c['entries'][0]['name'], channel)
                 #Then, remove the channel
                 self.channels.remove(c)
                 log.info("Removed channel %s", channel)
