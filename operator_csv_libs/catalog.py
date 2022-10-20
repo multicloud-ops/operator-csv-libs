@@ -199,17 +199,43 @@ class Catalog:
             if c['name'] == channel:
                 #If so, first remove all the bundles it contains
                 while len(c['entries']) > 0:
-                    self.remove_bundle(c['entries'][0]['name'])
+                    self._remove_bundle_from_channel(c['entries'][0]['name'], channel)
                 #Then, remove the channel
                 self.channels.remove(c)
                 log.info("Removed channel %s", channel)
                 #Check if there are any further channels remaining, if not, then return without updating the default channel
                 if len(self.channels) == 0:
-                    log.warning("There are no channels remaining in catalog %s", self.package['name'])
-                    return
+                    raise CatalogError("There are no channels remaining in catalog %s", self.package['name'])
                 #Finally, if the removed channel is the current default channel and there exist remaining channels, update the default channel automatically
                 if channel == self.get_default_channel():
-                    self.set_default_channel(self._get_latest_channel())
+                    latest_channel = self._get_latest_channel()
+                    if 'name' not in latest_channel.keys():
+                        raise CatalogError("Unnamed channel: %s", str(latest_channel))
+                    self.set_default_channel(latest_channel['name'])
+    
+    #Remove a bundle, unless that bundle is contained in another channel, then do nothing
+    def _remove_bundle_from_channel(self, bundle_name, channel_name):
+        #Initialize a boolean to track whether the bundle belongs to another channel
+        multi_channel_bundle = False
+        #Loop through all bundles in the object
+        for bundle in self.bundles:
+            #If the desired bundle is found, then proceed to check if it belongs to another channel
+            if bundle['name'] == bundle_name:
+                for channel in self.channels:
+                    for entry in channel['entries']:
+                        #First determine if the bundle is contained in the provided channel, and remove its reference there
+                        if channel['name'] == channel_name:
+                            if bundle['name'] == entry['name']:
+                                channel['entries'].remove(entry)
+                                log.info("Removed bundle entry %s from channel %s", bundle_name, channel_name)
+                        #If it belongs to any other channel, set the multi-channel-bundle boolean to true so that the bundle is not removed
+                        else:
+                            if bundle['name'] == entry['name']:
+                                multi_channel_bundle = True
+                #Then, remove the bundle itself if the only channel it belongs to is the one provided
+                if not multi_channel_bundle:
+                    self.bundles.remove(bundle)
+                    log.info("Removed bundle %s", bundle_name)
 
     #Remove a bundle, and if that bundle is contained in a channel, remove it from the channel as well
     def remove_bundle(self, name):
