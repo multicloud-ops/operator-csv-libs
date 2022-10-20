@@ -214,7 +214,7 @@ class Catalog:
                     self.set_default_channel(latest_channel['name'])
     
     #Remove a bundle, unless that bundle is contained in another channel, then do nothing
-    def _remove_bundle_from_channel(self, bundle_name, channel_name):
+    def remove_bundle_from_channel(self, bundle_name, channel_name):
         #Initialize a boolean to track whether the bundle belongs to another channel
         multi_channel_bundle = False
         #Loop through all bundles in the object
