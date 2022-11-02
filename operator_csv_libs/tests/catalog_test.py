@@ -1,5 +1,6 @@
 import os
 import unittest
+import copy
 from ..catalog import Catalog, CatalogError
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -175,7 +176,7 @@ class TestCatalog(unittest.TestCase):
     
     def test_add_channel_and_bundles(self):
         #Get alpha channel and bundles and copy into a variable
-        channel_and_bundles = self.catalog.get_channel_and_bundles('alpha').copy()
+        channel_and_bundles = copy.deepcopy(self.catalog.get_channel_and_bundles('alpha'))
 
         #Remove alpha channel (removes bundles as well), ignoring the exception it will throw since alpha is the last channel
         try:
