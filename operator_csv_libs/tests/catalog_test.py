@@ -174,8 +174,8 @@ class TestCatalog(unittest.TestCase):
         self.assertEqual(BUNDLES, self.catalog.get_channel_and_bundles('alpha')['bundles'])
     
     def test_add_channel_and_bundles(self):
-        #Get alpha channel and bundles and store as variable
-        channel_and_bundles = self.catalog.get_channel_and_bundles('alpha')
+        #Get alpha channel and bundles and copy into a variable
+        channel_and_bundles = self.catalog.get_channel_and_bundles('alpha').copy()
 
         #Remove alpha channel (removes bundles as well), ignoring the exception it will throw since alpha is the last channel
         try:
