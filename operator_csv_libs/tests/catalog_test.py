@@ -177,8 +177,11 @@ class TestCatalog(unittest.TestCase):
         #Get alpha channel and bundles and store as variable
         channel_and_bundles = self.catalog.get_channel_and_bundles('alpha')
 
-        #Remove alpha channel (removes bundles as well)
-        self.catalog.remove_channel('alpha')
+        #Remove alpha channel (removes bundles as well), ignoring the exception it will throw since alpha is the last channel
+        try:
+            self.catalog.remove_channel('alpha')
+        except CatalogError as ce:
+            pass
 
         #Assert alpha channel and bundles have been removed
         self.assertEqual(self.catalog.get_channel_and_bundles('alpha'), None)
