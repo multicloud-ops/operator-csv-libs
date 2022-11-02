@@ -148,15 +148,14 @@ class Catalog:
         #Return the list of channels matching the substring
         return channels_matching_substring
     
-    #Get a single channel matching a provided string, throw an exception if not found
+    #Get a single channel matching a provided string, return none if not found
     def get_channel(self, channel):
-        #Find the channel, and if not found, throw an exception
+        #Find the channel, and if not found, return none
         retrieved_channel = None
         for ch in self.channels:
             if ch['name'] == channel:
                 retrieved_channel = ch
-        if retrieved_channel == None:
-            raise CatalogError(f"Channel {channel} not found in catalog {self.package['name']}")
+                break
         
         #If it is found, return the channel
         return retrieved_channel
@@ -178,15 +177,14 @@ class Catalog:
         #Return the list of bundles matching the substring
         return bundles_matching_substring
     
-    #Get a single bundle matching a provided string, throw an exception if not found
+    #Get a single bundle matching a provided string, return none if not found
     def get_bundle(self, bundle):
-        #Find the bundle, and if not found, throw an exception
+        #Find the bundle, and if not found, return none
         retrieved_bundle = None
         for b in self.bundles:
             if b['name'] == bundle:
                 retrieved_bundle = b
-        if retrieved_bundle == None:
-            raise CatalogError(f"Bundle {bundle} not found in catalog {self.package['name']}")
+                break
         
         #If it is found, return the channel
         return retrieved_bundle
@@ -197,12 +195,17 @@ class Catalog:
     def get_channel_and_bundles(self, channel):
         #Get the channel matching the provided channel name
         channel = self.get_channel(channel)
+
+        #If channel is not found then return none
+        if channel == None:
+            return None
         
         #If channel exists, then retrieve all its bundles
         bundles = []
         for entry in channel['entries']:
             bundle = self.get_bundle(entry['name'])
-            bundles.append(bundle)
+            if bundle != None:
+                bundles.append(bundle)
         
         #After retrieving all bundles corresponding to the channel, return the formatted dict
         return { 'channel' : channel, 'bundles' : bundles }
@@ -328,17 +331,38 @@ class Catalog:
     #It expects the same format as is returned by the get_channel_and_bundles function
     def add_channel_and_bundles(self, channel_and_bundles):
         #Sanity check on the channel and bundles input parameters
+        if channel_and_bundles == None: #Added since the get_channel_and_bundles function can return None now
+            raise CatalogError("The provided channel and bundles parameter was None")
         if 'channel' not in channel_and_bundles.keys():
             raise CatalogError("No channel was provided")
+        if 'name' not in channel_and_bundles['channel'].keys():
+            raise CatalogError("The provided channel was unnamed")
         if 'bundles' not in channel_and_bundles.keys():
             raise CatalogError("No bundles were provided")
+        
+        #Sanity check on channel before appending
+        for channel in self.channels:
+            if channel['name'] == channel_and_bundles['channel']['name']:
+                raise CatalogError(f"Channel already exists: {channel_and_bundles['channel']['name']}")
         
         #Add the channel to the catalog along with its entries
         self.channels.append(channel_and_bundles['channel'])
 
         #Add the bundles corresponding to the channel entries into the catalog
         for bundle in channel_and_bundles['bundles']:
-            self.bundles.append(bundle)
+            #Sanity check that the bundle is named
+            if 'name' not in bundle.keys():
+                raise CatalogError("A provided bundle was unnamed")
+            
+            #Sanity check that the bundle doesn't already exist
+            bundle_exists = False
+            for b in self.bundles:
+                if b['name'] == bundle['name']:
+                    bundle_exists = True
+            
+            #If it doesn't already exist, then append it
+            if not bundle_exists:
+                self.bundles.append(bundle)
 
     def get_latest_channel_entry(self, channel):
         names = [e['name'] for e in channel['entries'] ]
