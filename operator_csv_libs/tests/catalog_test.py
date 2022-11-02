@@ -1,6 +1,6 @@
 import os
 import unittest
-from ..catalog import Catalog
+from ..catalog import Catalog, CatalogError
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -139,6 +139,13 @@ class TestCatalog(unittest.TestCase):
         self.assertNotEqual(self.catalog.channels, self.catalog.get_channels_by_substring("beta"))
         self.assertNotEqual(self.catalog.get_channels_by_substring("beta"), CHANNELS)
     
+    def test_get_channel(self):
+        #Assert the alpha channel is returned when getting the alpha channel by its name
+        self.assertEqual(self.catalog.get_channel("alpha"), CHANNELS[0])
+
+        #Assert that an exception is thrown when the beta channel (which doesn't exist) is searched for
+        self.assertRaises(CatalogError, self.catalog.get_channel("beta"))
+    
     def test_get_bundles(self):
         self.assertEqual(self.catalog.get_bundles(), self.catalog.bundles)
         self.assertEqual(self.catalog.get_bundles(), BUNDLES)
@@ -151,6 +158,36 @@ class TestCatalog(unittest.TestCase):
         #Assert one bundle is in the response when providing a substring contained only by that one, and that the other is not returned
         self.assertIn(BUNDLE_061, self.catalog.get_bundles_by_substring('v0.6.1'))
         self.assertNotIn(BUNDLE_061, self.catalog.get_bundles_by_substring('v0.9.4'))
+    
+    def test_get_bundle(self):
+        #Assert the 0.6.1 bundle returned when searching for it by name
+        self.assertEqual(BUNDLE_061, self.catalog.get_bundle('etcdoperator-community.v0.6.1'))
+
+        #Assert an exception is returned when searching for the 0.6.2 channel (doesn't exist)
+        self.assertRaises(CatalogError, self.catalog.get_bundle('etcdoperator-community.v0.6.2'))
+    
+    def test_get_channel_and_bundles(self):
+        #Assert that the alpha channel is returned under the channel key
+        self.assertEqual(CHANNELS[0], self.catalog.get_channel_and_bundles('alpha')['channel'])
+
+        #Assert that the bundles are returned under the bundles key
+        self.assertEqual(BUNDLES, self.catalog.get_channel_and_bundles('alpha')['bundles'])
+    
+    def test_add_channel_and_bundles(self):
+        #Get alpha channel and bundles and store as variable
+        channel_and_bundles = self.catalog.get_channel_and_bundles('alpha')
+
+        #Remove alpha channel (removes bundles as well)
+        self.catalog.remove_channel('alpha')
+
+        #Assert alpha channel and bundles have been removed
+        self.assertRaises(CatalogError, self.catalog.get_channel_and_bundles('alpha'))
+
+        #Add alpha channel and bundles
+        self.catalog.add_channel_and_bundles(channel_and_bundles)
+
+        #Assert alpha channel and bundles are now there
+        self.assertEqual(channel_and_bundles, self.catalog.get_channel_and_bundles('alpha'))
 
     def test_get_default_channel(self):
         self.assertEqual(self.catalog.get_default_channel(), 'alpha')
