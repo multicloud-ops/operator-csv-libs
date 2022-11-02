@@ -144,7 +144,7 @@ class TestCatalog(unittest.TestCase):
         self.assertEqual(self.catalog.get_channel("alpha"), CHANNELS[0])
 
         #Assert that an exception is thrown when the beta channel (which doesn't exist) is searched for
-        self.assertRaises(CatalogError, self.catalog.get_channel("beta"))
+        self.assertRaises(CatalogError, self.catalog.get_channel, 'beta')
     
     def test_get_bundles(self):
         self.assertEqual(self.catalog.get_bundles(), self.catalog.bundles)
@@ -164,7 +164,7 @@ class TestCatalog(unittest.TestCase):
         self.assertEqual(BUNDLE_061, self.catalog.get_bundle('etcdoperator-community.v0.6.1'))
 
         #Assert an exception is returned when searching for the 0.6.2 channel (doesn't exist)
-        self.assertRaises(CatalogError, self.catalog.get_bundle('etcdoperator-community.v0.6.2'))
+        self.assertRaises(CatalogError, self.catalog.get_bundle, 'etcdoperator-community.v0.6.2')
     
     def test_get_channel_and_bundles(self):
         #Assert that the alpha channel is returned under the channel key
@@ -181,7 +181,7 @@ class TestCatalog(unittest.TestCase):
         self.catalog.remove_channel('alpha')
 
         #Assert alpha channel and bundles have been removed
-        self.assertRaises(CatalogError, self.catalog.get_channel_and_bundles('alpha'))
+        self.assertRaises(CatalogError, self.catalog.get_channel_and_bundles, 'alpha')
 
         #Add alpha channel and bundles
         self.catalog.add_channel_and_bundles(channel_and_bundles)
