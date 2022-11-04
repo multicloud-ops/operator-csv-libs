@@ -214,7 +214,11 @@ class Catalog:
         return self.package['defaultChannel']
 
     def set_default_channel(self, channel):
-        self.package['defaultChannel'] = channel
+        for ch in self.channels:
+            if ch['name'] == channel:
+                self.package['defaultChannel'] = channel
+                return
+        raise CatalogError("Channel not found: {}: cannot set default channel")
 
     def write_new_file(self, filename='./catalog.json'):
         with open(filename, 'w') as f:
@@ -347,6 +351,11 @@ class Catalog:
         
         #Add the channel to the catalog along with its entries
         self.channels.append(channel_and_bundles['channel'])
+
+        #If the added channel is the only one in the catalog and the default channel does not align with the
+        #state of the channels, then update the default channel to be the added channel
+        if (len(self.channels) == 1) and (self.get_default_channel() != channel_and_bundles['channel']['name']):
+            self.set_default_channel(channel_and_bundles['channel']['name'])
 
         #Add the bundles corresponding to the channel entries into the catalog
         for bundle in channel_and_bundles['bundles']:
