@@ -301,7 +301,7 @@ class Catalog:
                 self.bundles.remove(bundle)
                 log.info("Removed bundle %s", name)
 
-    def add_channel(self, channel, package):
+    def add_channel(self, channel, package, update_default_channel_to_latest=False):
         #Add the channel
         self.channels.append({
             "schema": "olm.channel",
@@ -311,9 +311,15 @@ class Catalog:
         })
         #Check if the added channel is the only channel in the Catalog
         if len(self.channels) != 1:
+            #If update to latest flag is passed in, then update default channel to latest
+            if update_default_channel_to_latest:
+                self.set_default_channel(self._get_latest_channel()['name'])
             return
         #If so, check if the default channel in the package is the added channel
         if self.get_default_channel() == channel:
+            #If update to latest flag is passed in, then update default channel to latest
+            if update_default_channel_to_latest:
+                self.set_default_channel(self._get_latest_channel()['name'])
             return
         #If not, then update the default channel to the added channel
         self.set_default_channel(channel)
@@ -333,7 +339,7 @@ class Catalog:
     
     #This function adds a channel and bundles from a formatted dict that is provided as a parameter
     #It expects the same format as is returned by the get_channel_and_bundles function
-    def add_channel_and_bundles(self, channel_and_bundles):
+    def add_channel_and_bundles(self, channel_and_bundles, update_default_channel_to_latest=False):
         #Sanity check on the channel and bundles input parameters
         if channel_and_bundles == None: #Added since the get_channel_and_bundles function can return None now
             raise CatalogError("The provided channel and bundles parameter was None")
@@ -354,7 +360,9 @@ class Catalog:
 
         #If the added channel is the only one in the catalog and the default channel does not align with the
         #state of the channels, then update the default channel to be the added channel
-        if (len(self.channels) == 1) and (self.get_default_channel() != channel_and_bundles['channel']['name']):
+        if update_default_channel_to_latest:
+            self.set_default_channel(self._get_latest_channel()['name'])
+        elif (len(self.channels) == 1) and (self.get_default_channel() != channel_and_bundles['channel']['name']):
             self.set_default_channel(channel_and_bundles['channel']['name'])
 
         #Add the bundles corresponding to the channel entries into the catalog
