@@ -212,6 +212,9 @@ class TestCatalog(unittest.TestCase):
         self.assertEqual(self.catalog.get_default_channel(), 'testChannel')
         self.assertEqual(self.catalog.package['defaultChannel'], 'testChannel')
 
+        #Make sure exception is thrown when default channel isn't in the catalog
+        self.assertRaises(CatalogError, self.catalog.set_default_channel, 'beta')
+
     def test_remove_channel(self):
         self.catalog.add_channel('testChannel', 'etcd')
         self.catalog.add_channel_entry(channel='testChannel', name='etcdoperator-community.v0.6.1')
