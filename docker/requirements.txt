@@ -9,5 +9,8 @@ slackclient==2.9.4
 cve_lookup==0.0.1
 cvss==2.3
 pyzenhub==0.3.1
+Markdown==3.4.1
 operator-csv-libs
 PyGithubFork
+bs4==0.0.1
+beautifulsoup4==4.11.1
