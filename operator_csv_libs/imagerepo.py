@@ -89,9 +89,7 @@ class ArtifactoryRepo:
         # For artifactory we need to massage the repo string a bit
         ### Split out all directories after artifactory.com/
         p = '/'.join(self.image.get_image_repo().split('/')[1:])
-        ### Split out the first part of repo.artifactory.com
-        r = self.image.get_image_repo().split('.')[0]
-        return '{}/{}'.format(r, p)
+        return '{}'.format(p)
 
     def _get_raw_image_digest(self):
         manifestpath = '/'.join([
