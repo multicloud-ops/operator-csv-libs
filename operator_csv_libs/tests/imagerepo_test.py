@@ -15,7 +15,7 @@ IMAGE_WITHOUT_TAG = 'hyc-cp4mcm-team-docker-local.artifactory.swg-devops.com/cic
 DEPLOYMENT = 'dummyDeploymentName'
 CONTAINER = 'dummyContainerName'
 
-ARTIFACTORY_REPO = 'hyc-cp4mcm-team-docker-local/cicd/cp4mcm'
+ARTIFACTORY_REPO = 'cicd/cp4mcm'
 QUAY_REPO = 'hybridappio/ham-application-assembler'
 DOCKER_REPO = 'docker.io/ibmcom'
 

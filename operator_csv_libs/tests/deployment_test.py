@@ -54,8 +54,7 @@ class TestDeployment(unittest.TestCase):
 
 
     def test_init(self):
-        TEST_DUMMY_DEPLOYMENT = copy.deepcopy(DUMMY_DEPLOYMENT)
-        self.assertEqual(self.dummy_deployment, TEST_DUMMY_DEPLOYMENT)
+        self.assertEqual(self.dummy_deployment.deployment, DUMMY_DEPLOYMENT)
 
     def test_set_image(self):
         new_image = "nginx:1.15.0-test"
@@ -67,4 +66,4 @@ class TestDeployment(unittest.TestCase):
         self.assertEqual(dummyContainers, self.dummy_deployment.get_containers())
 
     def test_get_updated(self):
-        self.assertEqual(self.dummy_deployment.get_updated, DUMMY_DEPLOYMENT)
+        self.assertEqual(self.dummy_deployment.get_updated(), DUMMY_DEPLOYMENT)
