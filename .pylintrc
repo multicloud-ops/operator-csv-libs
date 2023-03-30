@@ -1,0 +1,5 @@
+[FORMAT]
+max-line-length=200
+
+[MASTER]
+disable=consider-using-f-string, invalid-name, redefined-outer-name, consider-using-sys-exit, missing-function-docstring, consider-using-dict-items, logging-format-interpolation, missing-module-docstring
