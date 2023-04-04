@@ -1,9 +1,15 @@
 import copy
+from functools import reduce
 
 class Deployment:
     """
     Class containing functions to work with Deployment yaml files
     """
+
+    LABEL_LOCATIONS= [
+        ('metadata', 'labels'),
+        ('spec', 'template', 'metadata', 'labels')
+    ]
 
     def __init__(self, deployment):
         self.original_deployment = deployment
@@ -32,3 +38,12 @@ class Deployment:
 
     def get_containers(self):
         return self.containers
+
+    def set_label(self, attribute, value):
+        for loc in self.LABEL_LOCATIONS:
+            labels = reduce(lambda d, key: d[key], loc, self.deployment)
+            if attribute in labels:
+                if len(loc) == 2:
+                    self.deployment[loc[0]][loc[1]][attribute] = value
+                elif len(loc) == 4:
+                    self.deployment[loc[0]][loc[1]][loc[2]][loc[3]][attribute] = value
