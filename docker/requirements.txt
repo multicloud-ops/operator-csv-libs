@@ -13,4 +13,4 @@ Markdown==3.4.1
 operator-csv-libs
 PyGithubFork
 bs4==0.0.1
-beautifulsoup4==4.11.1
+beautifulsoup4==4.12.1
