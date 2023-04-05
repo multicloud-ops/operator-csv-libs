@@ -12,5 +12,6 @@ setup(
         'pyyaml==6.0',
         'pygithub==1.55',
         'dohq-artifactory==0.8.4',
+        'natsort==8.3.1'
     ]
 )
