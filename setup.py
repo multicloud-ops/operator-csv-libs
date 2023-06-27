@@ -11,7 +11,7 @@ setup(
         'requests==2.28.1',
         'pyyaml==6.0',
         'pygithub==1.55',
-        'dohq-artifactory==0.8.4',
+        'dohq-artifactory==0.9.0',
         'natsort==8.3.1'
     ]
 )
