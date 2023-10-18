@@ -417,6 +417,7 @@ class OperatorCatalog:
         #Check whether the path to the operator catalog is a file, if so then load from file
         if os.path.isfile(path):
             self._load_operator_catalog_from_json_stream_file(path)
+            return
         
         #If the operator catalog path does exist, then loop through its subdirectories
         for subdirectory in os.listdir(path):
