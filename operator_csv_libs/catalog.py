@@ -38,6 +38,7 @@ class Catalog:
             self.package = package
             self.channels = channels
             self.bundles = bundles
+            return
 
         #If the provided path does not exist, then raise an exception
         if not os.path.exists(file):
@@ -489,6 +490,7 @@ class OperatorCatalog:
             #Initialize catalog objects for each of the catalogs loaded from the JSON stream file
             for catalog in self.catalogs.keys():
                 self.catalogs[catalog] = Catalog(
+                    file=None,
                     package=self.catalogs[catalog]["package"],
                     channels=self.catalogs[catalog]["channels"],
                     bundles=self.catalogs[catalog]["bundles"]
