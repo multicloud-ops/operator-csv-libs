@@ -25,12 +25,19 @@ Class for interacting with File based Catalog files
 '''
 class Catalog:
     #Constructor function for the Catalog class
-    def __init__(self, file, indent=4):
+    def __init__(self, file, indent=4, package=None, channels=[], bundles=[]):
         #Initialize some class variables for the Catalog class
         self.channels = []
         self.package = ''
         self.bundles = []
         self.indent = indent
+
+        #If the package, channels, and bundles are already loaded into memory, then
+        #load the Catalog object using the provided config dicts
+        if package != None and len(channels) > 0 and len(bundles) > 0:
+            self.package = package
+            self.channels = channels
+            self.bundles = bundles
 
         #If the provided path does not exist, then raise an exception
         if not os.path.exists(file):
@@ -406,6 +413,10 @@ class OperatorCatalog:
         if not os.path.exists(path):
             raise CatalogError(f"Operator catalog path does not exist: {path}")
         
+        #Check whether the path to the operator catalog is a file, if so then load from file
+        if os.path.isfile(path):
+            self._load_operator_catalog_from_json_stream_file(path)
+        
         #If the operator catalog path does exist, then loop through its subdirectories
         for subdirectory in os.listdir(path):
             if os.path.isdir(f"{path}/{subdirectory}"):
@@ -415,6 +426,73 @@ class OperatorCatalog:
                     self.add_catalog_from_file(f"{path}/{subdirectory}/{files[0]}")
                 else:
                     self.add_catalog_from_directory(f"{path}/{subdirectory}")
+
+    #Load the OperatorCatalog object using a single json stream file
+    def _load_operator_catalog_from_json_stream_file(self, file):
+        #Note that the catalog.json file is expected to be formatted as a json stream
+        with open(file) as stream:
+            #Initialize some variables for reading the json stream
+            separators = []
+            lines = stream.readlines()
+            count = 0
+            startValue = 0
+
+            #Loop through the lines in the file and determine the length in lines of each json object
+            for line in lines:
+                if line == '}\n' or line == '}':
+                    separators.append(count)
+                count += 1
+
+            #Use the length readings from above to loop back through and read in each json object
+            for s in separators:
+                #Load the nth json object
+                data = json.loads(''.join(lines[startValue:s+1]))
+
+                #Sanity check whether there is an olm schema value, if not then the json is invalid
+                if 'schema' not in data:
+                    raise CatalogError(f"Cannot find a schema value in {data}")
+
+                #Read in the olm package object
+                if data['schema'] == 'olm.package':
+                    if data['name'] not in self.catalogs.keys():
+                        self.catalogs[data['name']] = {
+                            "package" : data,
+                            "channels" : [],
+                            "bundles" : []
+                        }
+                    else:
+                        self.catalogs[data['name']]["package"] = data
+                #Read in an olm channel object
+                elif data['schema'] == 'olm.channel':
+                    if data['package'] not in self.catalogs.keys():
+                        self.catalogs[data['package']] = {
+                            "package" : {},
+                            "channels" : [data],
+                            "bundles" : []
+                        }
+                    else:
+                        self.catalogs[data['package']]["channels"].append(data)
+                #Read in an olm bundle object
+                elif data['schema'] == 'olm.bundle':
+                    if data['package'] not in self.catalogs.keys():
+                        self.catalogs[data['package']] = {
+                            "package" : {},
+                            "channels" : [],
+                            "bundles" : [data]
+                        }
+                    else:
+                        self.catalogs[data['package']]["bundles"].append(data)
+
+                #Increment the start value function to the initial line index of the next json object
+                startValue = s+1
+            
+            #Initialize catalog objects for each of the catalogs loaded from the JSON stream file
+            for catalog in self.catalogs.keys():
+                self.catalogs[catalog] = Catalog(
+                    package=self.catalogs[catalog]["package"],
+                    channels=self.catalogs[catalog]["channels"],
+                    bundles=self.catalogs[catalog]["bundles"]
+                )
     
     #Add a new catalog into the operator catalog by loading it from a file
     def add_catalog_from_file(self, path):

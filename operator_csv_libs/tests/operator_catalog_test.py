@@ -207,6 +207,7 @@ class TestOperatorCatalog(unittest.TestCase):
 
     def setUp(self):
         self.operatorcatalog = OperatorCatalog(path=f"{THIS_DIR}/test_files/valid_catalogs")
+        self.stream_operatorcatalog = OperatorCatalog(path=f"{THIS_DIR}/test_files/valid_operator_catalog.json")
 
     def test_init(self):
         #Assert that both catalog 1 and catalog 2 are read in (but not catalog 3 as we will add that in from a file later)
@@ -216,6 +217,14 @@ class TestOperatorCatalog(unittest.TestCase):
         self.assertEqual(self.operatorcatalog.catalogs[CATALOG_2_OPERATOR_NAME].package, CATALOG_2_PACKAGE)
         self.assertCountEqual(self.operatorcatalog.catalogs[CATALOG_2_OPERATOR_NAME].channels, CATALOG_2_CHANNELS)
         self.assertCountEqual(self.operatorcatalog.catalogs[CATALOG_2_OPERATOR_NAME].bundles, CATALOG_2_BUNDLES)
+
+        #Assert that both catalog 1 and catalog 2 are read in from the valid JSON stream file
+        self.assertEqual(self.stream_operatorcatalog.catalogs[CATALOG_1_OPERATOR_NAME].package, CATALOG_1_PACKAGE)
+        self.assertCountEqual(self.stream_operatorcatalog.catalogs[CATALOG_1_OPERATOR_NAME].channels, CATALOG_1_CHANNELS)
+        self.assertCountEqual(self.stream_operatorcatalog.catalogs[CATALOG_1_OPERATOR_NAME].bundles, CATALOG_1_BUNDLES)
+        self.assertEqual(self.stream_operatorcatalog.catalogs[CATALOG_2_OPERATOR_NAME].package, CATALOG_2_PACKAGE)
+        self.assertCountEqual(self.stream_operatorcatalog.catalogs[CATALOG_2_OPERATOR_NAME].channels, CATALOG_2_CHANNELS)
+        self.assertCountEqual(self.stream_operatorcatalog.catalogs[CATALOG_2_OPERATOR_NAME].bundles, CATALOG_2_BUNDLES)
 
     def test_remove_catalog(self):
         #Assert the catalog exists
