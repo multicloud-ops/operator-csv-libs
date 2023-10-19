@@ -574,7 +574,7 @@ class OperatorCatalog:
             raise CatalogError(f"The provided path is not a directory: {directory}")
         
         #Sanity check whether there exist catalogs to write
-        if len(self.catalogs.keys() == 0):
+        if len(self.catalogs.keys()) == 0:
             raise CatalogError(f"There are currently no catalogs to write")
         
         #If there exist catalogs to write, then loop through the catalogs
