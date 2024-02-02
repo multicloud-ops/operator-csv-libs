@@ -1,4 +1,4 @@
-pyyaml==6.0
+pyyaml==6.0.1
 pygithub==1.55
 dohq-artifactory==0.8.4
 requests==2.27.1
