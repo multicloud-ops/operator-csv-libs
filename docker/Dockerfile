@@ -3,7 +3,7 @@ FROM base as builder
 
 # Run multistage build to save some space on the resulting image
 RUN apk add git
-RUN apk add --update build-base libffi-dev cargo rust
+RUN apk add --update build-base libffi-dev
 RUN mkdir /install
 WORKDIR /install
 COPY /docker/requirements.txt /requirements.txt
